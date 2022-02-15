@@ -1,6 +1,6 @@
 [![Image](imgs/NUKI_Logo.png)](https://nuki.io/de/)  
 
-###Nuki Bridge HTTP-API  
+### Nuki Bridge HTTP-API  
 
 [![IP-Symcon is awesome!](https://img.shields.io/badge/IP--Symcon-6.0-blue.svg)](https://www.symcon.de)
 [![Module Version](https://img.shields.io/badge/Module_Version-2.0-blue.svg)]()
