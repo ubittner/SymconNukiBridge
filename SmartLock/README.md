@@ -142,21 +142,21 @@ $Aktion:        Führt eine Aktion für das Nuki Smart Lock gemäss Tabelle aus:
 
 Wert | Smart Lock Aktion            | Smart Lock Aktion (deutsch)          
 ---- | ---------------------------- | -----------------------------------------------------------
-1    | unlock                       | aufsperren
-2    | lock                         | zusperren
-3    | unlatch                      | entriegeln
-4    | lock ‘n’ go                  | automatisch aufsperren und wieder zusperren
-5    | lock ‘n’ go with unlatch     | automatisch aufsperren mit entriegeln und wieder zusperren
+0    | unlock                       | aufsperren
+1    | lock                         | zusperren
+2    | unlatch                      | entriegeln
+3    | lock ‘n’ go                  | automatisch aufsperren und wieder zusperren
+4    | lock ‘n’ go with unlatch     | automatisch aufsperren mit entriegeln und wieder zusperren
 
 ```text
 Beispiel:  
 //Smart Lock zusperren
-$setAction = NUKISLB_SetSmartLockAction(12345, 2); 
+$setAction = NUKISLB_SetSmartLockAction(12345, 1); 
 // Gibt den Rückgabewert aus
 echo $setAction;      
 
 //Smart Lock aufsperren
-$setAction = NUKISLB_SetSmartLockAction(12345, 1);
+$setAction = NUKISLB_SetSmartLockAction(12345, 0);
 // Gibt den Rückgabewert aus
 echo $setAction;      
 ```
