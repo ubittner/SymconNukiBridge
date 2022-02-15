@@ -1,0 +1,12 @@
+{
+  "id": "{C761F228-6964-E7B7-A8F4-E90DC334649A}",
+  "author": "Ulrich Bittner",
+  "name": "Nuki Bridge",
+  "url": "https://nuki.io/de/",
+  "compatibility": {
+    "version": "6.0"
+  },
+  "version": "2.0",
+  "build": 1,
+  "date": 1644937334
+}

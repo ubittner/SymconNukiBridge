@@ -1,0 +1,18 @@
+{
+  "id": "{ABB39A30-64E6-CA62-29DD-DE334B91477F}",
+  "name": "Nuki Configurator Bridge API",
+  "type": 4,
+  "vendor": "NUKI",
+  "aliases": [
+    "Nuki Konfigurator (Bridge API)"
+  ],
+  "url": "https://github.com/ubittner/SymconNukiBridge",
+  "parentRequirements": [
+    "{E187AEEA-487B-ED93-403D-B7D51322A4DF}"
+  ],
+  "childRequirements": [],
+  "implemented": [
+    "{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}"
+  ],
+  "prefix": "NUKICB"
+}

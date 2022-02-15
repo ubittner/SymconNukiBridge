@@ -1,0 +1,18 @@
+{
+  "id": "{2F33704C-4B0B-38B3-7EB0-65DF0630C41D}",
+  "name": "Nuki Opener Bridge API",
+  "type": 3,
+  "vendor": "NUKI",
+  "aliases": [
+    "Nuki Opener (Bridge API)"
+  ],
+  "url": "https://github.com/ubittner/SymconNukiBridge",
+  "parentRequirements": [
+    "{E187AEEA-487B-ED93-403D-B7D51322A4DF}"
+  ],
+  "childRequirements": [],
+  "implemented": [
+    "{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}"
+  ],
+  "prefix": "NUKIOB"
+}
