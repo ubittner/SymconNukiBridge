@@ -249,7 +249,20 @@ class NukiOpenerBridgeAPI extends IPSModule
                         $this->SendDebug(__FUNCTION__, 'Result http code: ' . $httpCode, 0);
                         if ($httpCode != 200) {
                             $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
-                            return $deviceType;
+                            //Retry
+                            $this->SendDebug(__FUNCTION__, 'Wait three seconds for retry...', 0);
+                            IPS_Sleep(3000);
+                            $result = json_decode($this->SendDataToParent($data), true);
+                            if (is_array($result)) {
+                                if (array_key_exists('httpCode', $result)) {
+                                    $httpCode = $result['httpCode'];
+                                    $this->SendDebug(__FUNCTION__, 'Second result http code: ' . $httpCode, 0);
+                                    if ($httpCode != 200) {
+                                        $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
+                                        return $deviceType;
+                                    }
+                                }
+                            }
                         }
                     }
                     if (array_key_exists('body', $result)) {
@@ -408,9 +421,22 @@ class NukiOpenerBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Result http code: ' . $httpCode, 0);
                 if ($httpCode != 200) {
                     $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
-                    $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
-                    $this->SetUpdateTimer();
-                    return false;
+                    //Retry
+                    $this->SendDebug(__FUNCTION__, 'Wait three seconds for retry...', 0);
+                    IPS_Sleep(3000);
+                    $result = json_decode($this->SendDataToParent($data), true);
+                    if (is_array($result)) {
+                        if (array_key_exists('httpCode', $result)) {
+                            $httpCode = $result['httpCode'];
+                            $this->SendDebug(__FUNCTION__, 'Second result http code: ' . $httpCode, 0);
+                            if ($httpCode != 200) {
+                                $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
+                                $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
+                                $this->SetUpdateTimer();
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
             if (array_key_exists('body', $result)) {
@@ -422,54 +448,49 @@ class NukiOpenerBridgeAPI extends IPSModule
                     }
                 }
             }
-            $actionText = '';
-            switch ($Action) {
-                case 1:
-                    $actionText = $this->Translate('Ring To Open was activated.');
-                    break;
-
-                case 2:
-                    $actionText = $this->Translate('Ring To Open was deactivated.');
-                    break;
-
-                case 3:
-                    $actionText = $this->Translate('The door buzzer has been pressed and has opened the door.');
-                    break;
-
-                case 4:
-                    $actionText = $this->Translate('Continuous mode was activated.');
-                    break;
-
-                case 5:
-                    $actionText = $this->Translate('Continuous mode was deactivated.');
-                    break;
-
-            }
+        }
+        //Only if we have no update automatic
+        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate') && $this->ReadPropertyInteger('UpdateInterval' == 0)) {
             if ($success) {
-                if (!empty($actionText)) {
-                    $this->UpdateLog(date('d.m.Y H:i:s'), $actionText);
-                }
-            } else {
-                //Revert
                 switch ($Action) {
-                    case 1: # activate rto
-                    case 2: # deactivate rto
-                        $this->SetValue('RingToOpen', $actualRingToOpenState);
+                    case 1:
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('Ring To Open was activated.'));
                         break;
 
-                    case 4: # activate continuous mode
-                    case 5: # deactivate continuous mode
-                        $this->SetValue('ContinuousMode', $actualContinuousModeState);
+                    case 2:
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('Ring To Open was deactivated.'));
                         break;
 
-                }
-                if ($this->ReadPropertyBoolean('UseActivityLog')) {
-                    $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
+                    case 3:
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The door buzzer has been pressed and has opened the door.'));
+                        break;
+
+                    case 4:
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('Continuous mode was activated.'));
+                        break;
+
+                    case 5:
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('Continuous mode was deactivated.'));
+                        break;
+
                 }
             }
         }
-        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
-            $this->GetOpenerState();
+        if (!$success) {
+            //Revert
+            switch ($Action) {
+                case 1: # activate rto
+                case 2: # deactivate rto
+                    $this->SetValue('RingToOpen', $actualRingToOpenState);
+                    break;
+
+                case 4: # activate continuous mode
+                case 5: # deactivate continuous mode
+                    $this->SetValue('ContinuousMode', $actualContinuousModeState);
+                    break;
+
+            }
+            $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
         }
         $this->SetUpdateTimer();
         return $success;
@@ -504,7 +525,20 @@ class NukiOpenerBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Result http code: ' . $httpCode, 0);
                 if ($httpCode != 200) {
                     $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
-                    return;
+                    //Retry
+                    $this->SendDebug(__FUNCTION__, 'Wait three seconds for retry...', 0);
+                    IPS_Sleep(3000);
+                    $result = json_decode($this->SendDataToParent($data), true);
+                    if (is_array($result)) {
+                        if (array_key_exists('httpCode', $result)) {
+                            $httpCode = $result['httpCode'];
+                            $this->SendDebug(__FUNCTION__, 'Second result http code: ' . $httpCode, 0);
+                            if ($httpCode != 200) {
+                                $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
             if (array_key_exists('body', $result)) {
@@ -599,7 +633,7 @@ class NukiOpenerBridgeAPI extends IPSModule
             $state = (bool) $openerData['ringactionState'];
             $this->SetValue('RingActionState', $state);
             if ($state) {
-                $this->SetTimerInterval('Update', 30000);
+                $this->SetTimerInterval('UpdateDeviceState', 30000);
             }
         }
         //Last ring
@@ -661,6 +695,11 @@ class NukiOpenerBridgeAPI extends IPSModule
 
     private function SetUpdateTimer(): void
     {
-        $this->SetTimerInterval('UpdateDeviceState', $this->ReadPropertyInteger('UpdateInterval') * 1000);
+        $interval = 0;
+        //Only if automnatic update is deactivated
+        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
+            $interval = $this->ReadPropertyInteger('UpdateInterval') * 1000;
+        }
+        $this->SetTimerInterval('UpdateDeviceState', $interval);
     }
 }

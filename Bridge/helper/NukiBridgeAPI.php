@@ -391,6 +391,11 @@ trait NukiBridgeAPI
         }
         $this->SendDebug(__FUNCTION__, $url, 0);
         $body = '';
+        //Enter semaphore
+        if (!IPS_SemaphoreEnter('Nuki_' . $this->InstanceID . '_SendDataToBridge', 5000)) {
+            $this->SendDebug(__FUNCTION__, 'Abort, Semaphore reached!', 0);
+            return json_encode(['httpCode' => 503, 'body' => []]);
+        }
         $ch = curl_init();
         curl_setopt_array($ch, [
             CURLOPT_URL               => $url,
@@ -417,6 +422,8 @@ trait NukiBridgeAPI
             $this->SendDebug(__FUNCTION__, 'An error has occurred: ' . json_encode($error_msg), 0);
         }
         curl_close($ch);
+        //Leave semaphore
+        IPS_SemaphoreLeave('Nuki_' . $this->InstanceID . '_SendDataToBridge');
         $result = ['httpCode' => $httpCode, 'body' => $body];
         $this->SendDebug(__FUNCTION__, 'Result: ' . json_encode($result), 0);
         return json_encode($result);

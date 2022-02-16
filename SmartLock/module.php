@@ -283,7 +283,20 @@ class NukiSmartLockBridgeAPI extends IPSModule
                         $this->SendDebug(__FUNCTION__, 'Result http code: ' . $httpCode, 0);
                         if ($httpCode != 200) {
                             $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
-                            return $deviceType;
+                            //Retry
+                            $this->SendDebug(__FUNCTION__, 'Wait three seconds for retry...', 0);
+                            IPS_Sleep(3000);
+                            $result = json_decode($this->SendDataToParent($data), true);
+                            if (is_array($result)) {
+                                if (array_key_exists('httpCode', $result)) {
+                                    $httpCode = $result['httpCode'];
+                                    $this->SendDebug(__FUNCTION__, 'Second result http code: ' . $httpCode, 0);
+                                    if ($httpCode != 200) {
+                                        $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
+                                        return $deviceType;
+                                    }
+                                }
+                            }
                         }
                     }
                     if (array_key_exists('body', $result)) {
@@ -325,23 +338,21 @@ class NukiSmartLockBridgeAPI extends IPSModule
 
     public function SetSmartLockAction(int $Action): bool
     {
-        $success = false;
         $nukiID = $this->ReadPropertyString('SmartLockUID');
         if (empty($nukiID)) {
-            return $success;
+            return false;
         }
         if (!$this->HasActiveParent()) {
-            return $success;
+            return false;
         }
         $deviceType = $this->DetermineDeviceType(false);
         if ($deviceType == 99999) {
-            return $success;
+            return false;
         }
         $this->SetTimerInterval('UpdateDeviceState', 0);
+        $success = false;
         $actualValue = $this->GetValue('SmartLock');
         $this->SetValue('SmartLock', $Action);
-        $actualDeviceState = $this->GetValue('DeviceState');
-        $newDeviceState = 3; # unlocked
         /*
          * Lock Actions Smart Lock
          * 1   unlock
@@ -353,7 +364,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         switch ($Action) {
             case 0: # Lock
                 $smartLockAction = 2;
-                $newDeviceState = 1; # locked
                 break;
 
             case 1: # Unlock
@@ -376,7 +386,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Unknown action: ' . $Action, 0);
                 return $success;
         }
-        $this->SetValue('DeviceState', $newDeviceState);
         $data = [];
         $buffer = [];
         $data['DataID'] = self::NUKI_BRIDGE_DATA_GUID;
@@ -384,7 +393,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
         $buffer['Params'] = ['nukiId' => (int) $nukiID, 'deviceType' => $deviceType, 'lockAction' => $smartLockAction];
         $data['Buffer'] = $buffer;
         $data = json_encode($data);
-        $this->SendDebug(__FUNCTION__, 'Data: ' . $data, 0);
+        $this->SendDebug(__FUNCTION__, 'Send data: ' . $data, 0);
         $result = json_decode($this->SendDataToParent($data), true);
         $this->SendDebug(__FUNCTION__, 'Result: ' . json_encode($result), 0);
         if (is_array($result)) {
@@ -393,58 +402,71 @@ class NukiSmartLockBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Result http code: ' . $httpCode, 0);
                 if ($httpCode != 200) {
                     $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
-                    $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
-                    $this->SetUpdateTimer();
-                    return false;
+                    //Retry
+                    $this->SendDebug(__FUNCTION__, 'Wait three seconds for retry...', 0);
+                    IPS_Sleep(3000);
+                    $result = json_decode($this->SendDataToParent($data), true);
+                    if (is_array($result)) {
+                        if (array_key_exists('httpCode', $result)) {
+                            $httpCode = $result['httpCode'];
+                            $this->SendDebug(__FUNCTION__, 'Second result http code: ' . $httpCode, 0);
+                            if ($httpCode != 200) {
+                                $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
+                                $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
+                                $this->SetValue('SmartLock', $actualValue);
+                                $this->SetUpdateTimer();
+                                return false;
+                            }
+                        }
+                    }
                 }
             }
             if (array_key_exists('body', $result)) {
                 $body = $result['body'];
                 if (is_array($body)) {
-                    $this->SendDebug(__FUNCTION__, 'Actual data: ' . json_encode($body), 0);
+                    $this->SendDebug(__FUNCTION__, 'Result body: ' . json_encode($body), 0);
                     if (array_key_exists('success', $body)) {
                         $success = (bool) $body['success'];
                     }
                 }
             }
-            $actionText = '';
-            switch ($Action) {
-                case 0: # Lock
-                    $actionText = $this->Translate('The Smart Lock was locked.');
-                    break;
+        }
+        //Only if we have no update automatic
+        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate') && $this->ReadPropertyInteger('UpdateInterval' == 0)) {
+            if ($success) {
+                switch ($Action) {
+                    case 0: # Lock
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The Smart Lock was locked.'));
+                        $this->SetValue('DeviceState', 1);
+                        break;
 
-                case 1: # Unlock
-                    $actionText = $this->Translate('The Smart Lock was unlocked.');
-                    break;
+                    case 1: # Unlock
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The Smart Lock was unlocked.'));
+                        $this->SetValue('DeviceState', 3);
+                        break;
 
-                case 2: # Unlatch
-                    $actionText = $this->Translate('The Smart Lock was unlatched.');
-                    break;
+                    case 2: # Unlatch
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The Smart Lock was unlatched.'));
+                        $this->SetValue('DeviceState', 3);
+                        break;
 
-                case 3: # Lock 'n' Go
-                    $actionText = $this->Translate('The Smart Lock was unlocked. (lock ‘n’ go).');
-                    break;
+                    case 3: # Lock 'n' Go
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The Smart Lock was unlocked. (lock ‘n’ go).'));
+                        $this->SetValue('DeviceState', 1);
+                        break;
 
-                case 4: # Lock 'n' Go with unlatch
-                    $actionText = $this->Translate('The Smart Lock was unlatched. (lock ‘n’ go).');
-                    break;
+                    case 4: # Lock 'n' Go with unlatch
+                        $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The Smart Lock was unlatched. (lock ‘n’ go).'));
+                        $this->SetValue('DeviceState', 1);
+                        break;
 
+                }
             }
         }
-        if ($success) {
-            if (!empty($actionText)) {
-                $this->UpdateLog(date('d.m.Y H:i:s'), $actionText);
-            }
-        } else {
+        if (!$success) {
             //Revert
             $this->SetValue('SmartLock', $actualValue);
-            $this->SetValue('DeviceState', $actualDeviceState);
-            if ($this->ReadPropertyBoolean('UseActivityLog')) {
-                $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
-            }
-        }
-        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
-            $this->GetSmartLockState();
+            $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
         }
         $this->SetUpdateTimer();
         return $success;
@@ -532,7 +554,20 @@ class NukiSmartLockBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Result http code: ' . $httpCode, 0);
                 if ($httpCode != 200) {
                     $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
-                    return;
+                    //Retry
+                    $this->SendDebug(__FUNCTION__, 'Wait three seconds for retry...', 0);
+                    IPS_Sleep(3000);
+                    $result = json_decode($this->SendDataToParent($data), true);
+                    if (is_array($result)) {
+                        if (array_key_exists('httpCode', $result)) {
+                            $httpCode = $result['httpCode'];
+                            $this->SendDebug(__FUNCTION__, 'Second result http code: ' . $httpCode, 0);
+                            if ($httpCode != 200) {
+                                $this->SendDebug(__FUNCTION__, 'Abort, result http code: ' . $httpCode . ', must be 200!', 0);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
             if (array_key_exists('body', $result)) {
@@ -731,6 +766,11 @@ class NukiSmartLockBridgeAPI extends IPSModule
 
     private function SetUpdateTimer(): void
     {
-        $this->SetTimerInterval('UpdateDeviceState', $this->ReadPropertyInteger('UpdateInterval') * 1000);
+        $interval = 0;
+        //Only if automnatic update is deactivated
+        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
+            $interval = $this->ReadPropertyInteger('UpdateInterval') * 1000;
+        }
+        $this->SetTimerInterval('UpdateDeviceState', $interval);
     }
 }
