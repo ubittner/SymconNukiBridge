@@ -6,7 +6,7 @@
   "aliases": [
     "Nuki Discovery (Bridge API)"
   ],
-  "url": "https://github.com/ubittner/SymconNukiBridge",
+  "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Discovery",
   "parentRequirements": [],
   "childRequirements": [],
   "implemented": [],

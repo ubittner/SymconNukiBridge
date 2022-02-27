@@ -6,7 +6,7 @@
   "aliases": [
     "Nuki Splitter (Bridge API)"
   ],
-  "url": "https://github.com/ubittner/SymconNukiBridge",
+  "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Bridge",
   "parentRequirements": [
   ],
   "childRequirements": [

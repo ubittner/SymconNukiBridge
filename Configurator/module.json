@@ -6,7 +6,7 @@
   "aliases": [
     "Nuki Konfigurator (Bridge API)"
   ],
-  "url": "https://github.com/ubittner/SymconNukiBridge",
+  "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Configurator",
   "parentRequirements": [
     "{E187AEEA-487B-ED93-403D-B7D51322A4DF}"
   ],
