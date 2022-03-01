@@ -151,12 +151,12 @@ Wert | Smart Lock Aktion            | Smart Lock Aktion (deutsch)
 ```text
 Beispiel:  
 //Smart Lock zusperren
-$setAction = NUKISLB_SetSmartLockAction(12345, 1); 
+$setAction = NUKISLB_SetSmartLockAction(12345, 0); 
 // Gibt den Rückgabewert aus
 echo $setAction;      
 
 //Smart Lock aufsperren
-$setAction = NUKISLB_SetSmartLockAction(12345, 0);
+$setAction = NUKISLB_SetSmartLockAction(12345, 1);
 // Gibt den Rückgabewert aus
 echo $setAction;      
 ```
