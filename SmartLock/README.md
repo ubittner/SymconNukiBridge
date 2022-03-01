@@ -142,8 +142,8 @@ $Aktion:        Führt eine Aktion für das Nuki Smart Lock gemäss Tabelle aus:
 
 Wert | Smart Lock Aktion            | Smart Lock Aktion (deutsch)          
 ---- | ---------------------------- | -----------------------------------------------------------
-0    | unlock                       | aufsperren
-1    | lock                         | zusperren
+0    | lock                         | zusperren
+1    | unlock                       | aufsperren
 2    | unlatch                      | entriegeln
 3    | lock ‘n’ go                  | automatisch aufsperren und wieder zusperren
 4    | lock ‘n’ go with unlatch     | automatisch aufsperren mit entriegeln und wieder zusperren
