@@ -8,7 +8,8 @@
       "Devices": "Geräte",
       "Device Type": "Gerätetyp",
       "Product Designation": "Produktbezeichnung",
-      "Unknown": "Unbekannt"
+      "Unknown": "Unbekannt",
+      "Device not found!": "Gerät nicht gefunden!"
     }
   }
 }

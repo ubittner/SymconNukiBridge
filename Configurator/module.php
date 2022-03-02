@@ -60,6 +60,125 @@ class NukiConfiguratorBridgeAPI extends IPSModule
     public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
+        $library = IPS_GetLibrary(self::LIBRARY_GUID);
+        $formData['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ' vom ' . date('d.m.Y', $library['Date']);
+        //Get all device instances first, first key is the UID and next key [0] is the instance id.
+        $existingInstanceIDs = [];
+        //Smart lock
+        foreach (IPS_GetInstanceListByModuleID(self::NUKI_SMARTLOCK_GUID) as $instanceID) {
+            $existingInstanceIDs[IPS_GetProperty($instanceID, 'SmartLockUID')][] = $instanceID;
+        }
+        //Opener
+        foreach (IPS_GetInstanceListByModuleID(self::NUKI_OPENER_GUID) as $instanceID) {
+            $existingInstanceIDs[IPS_GetProperty($instanceID, 'OpenerUID')][] = $instanceID;
+        }
+        $values = [];
+        $location = $this->GetCategoryPath($this->ReadPropertyInteger(('CategoryID')));
+        $pairedDevices = json_decode($this->GetPairedDevices(), true);
+        foreach ($pairedDevices as $pairedDevice) {
+            if (array_key_exists('deviceType', $pairedDevice)) {
+                $deviceType = $pairedDevice['deviceType'];
+                $deviceName = $pairedDevice['name'];
+                $nukiID = $pairedDevice['nukiId'];
+                switch ($deviceType) {
+                    case 0: # Nuki Smart Lock 1.0/2.0
+                    case 3: # Nuki Smart Door
+                    case 4: # Nuki Smart Lock 3.0 (Pro)
+                        switch ($deviceType) {
+                            case 0:
+                                $productDesignation = 'Smart Lock 1.0/2.0';
+                                break;
+
+                            case 3:
+                                $productDesignation = 'Smart Door ';
+                                break;
+
+                            case 4:
+                                $productDesignation = 'Smart Lock 3.0 (Pro)';
+                                break;
+
+                            default:
+                                $productDesignation = $this->Translate('Unknown');
+                        }
+                        $instanceID = $this->GetDeviceInstances($nukiID, 0);
+                        $this->SendDebug(__FUNCTION__ . ' Smart Lock ID ', json_encode($nukiID), 0);
+                        $this->SendDebug(__FUNCTION__ . ' Smart Lock Instance ID ', json_encode($instanceID), 0);
+                        $value = [
+                            'DeviceID'           => $nukiID,
+                            'DeviceType'         => $deviceType,
+                            'ProductDesignation' => $productDesignation,
+                            'create'             => [
+                                'moduleID'      => self::NUKI_SMARTLOCK_GUID,
+                                'name'          => $deviceName . ' (Bridge API)',
+                                'configuration' => [
+                                    'SmartLockUID'  => (string) $nukiID,
+                                    'SmartLockName' => (string) $deviceName
+                                ],
+                                'location' => $location
+                            ]
+                        ];
+                        break;
+
+                    case 2: # Nuki Opener
+                        $instanceID = $this->GetDeviceInstances($nukiID, 2);
+                        $this->SendDebug(__FUNCTION__ . ' Opener ID ', json_encode($nukiID), 0);
+                        $this->SendDebug(__FUNCTION__ . ' Opener Instance ID ', json_encode($instanceID), 0);
+                        $value = [
+                            'DeviceID'           => $nukiID,
+                            'DeviceType'         => $deviceType,
+                            'ProductDesignation' => 'Opener',
+                            'create'             => [
+                                'moduleID'      => self::NUKI_OPENER_GUID,
+                                'name'          => $deviceName . ' (Bridge API)',
+                                'configuration' => [
+                                    'OpenerUID'  => (string) $nukiID,
+                                    'OpenerName' => (string) $deviceName
+                                ],
+                                'location' => $location
+                            ]
+                        ];
+                        break;
+
+                }
+                if (isset($existingInstanceIDs[$nukiID])) {
+                    $value['name'] = IPS_GetName($existingInstanceIDs[$nukiID][0]);
+                    $value['instanceID'] = $existingInstanceIDs[$nukiID][0];
+                } else {
+                    $value['name'] = $pairedDevice['name'];
+                    $value['instanceID'] = 0;
+                }
+                $values[] = $value;
+            }
+        }
+        foreach ($existingInstanceIDs as $deviceUID => $instanceIDs) {
+            foreach ($instanceIDs as $index => $instanceID) {
+                //The first entry for each device UID was already added as valid value
+                $device = false;
+                foreach ($pairedDevices as $pairedDevice) {
+                    if ($pairedDevice['nukiId'] == $deviceUID) {
+                        $device = true;
+                    }
+                }
+                if ($index === 0 && $device) {
+                    continue;
+                }
+                //However, if a device UID is not a found device UID or has multiple instances, they are erroneous
+                $values[] = [
+                    'DeviceID'           => $deviceUID,
+                    'DeviceType'         => '',
+                    'ProductDesignation' => $this->Translate('Device not found!'),
+                    'name'               => IPS_GetName($instanceID),
+                    'instanceID'         => $instanceID
+                ];
+            }
+        }
+        $formData['actions'][0]['values'] = $values;
+        return json_encode($formData);
+    }
+
+    public function OLD_GetConfigurationForm()
+    {
+        $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         //Version info
         $library = IPS_GetLibrary(self::LIBRARY_GUID);
         $formData['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ' vom ' . date('d.m.Y', $library['Date']);
@@ -179,7 +298,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
         $data['Buffer'] = $buffer;
         $data = json_encode($data);
         $result = json_decode($this->SendDataToParent($data), true);
-        $devices = '';
+        $devices = '{}';
         if (array_key_exists('body', $result)) {
             $this->SendDebug(__FUNCTION__, 'Actual data: ' . json_encode($result['body']), 0);
             $body = $result['body'];
