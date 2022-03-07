@@ -109,15 +109,15 @@ class NukiConfiguratorBridgeAPI extends IPSModule
                             $this->SendDebug(__FUNCTION__ . ' Smart Lock ID ', json_encode($nukiID), 0);
                             $this->SendDebug(__FUNCTION__ . ' Smart Lock Instance ID ', json_encode($instanceID), 0);
                             $value = [
-                                'DeviceID' => $nukiID,
-                                'DeviceType' => $deviceType,
+                                'DeviceID'           => $nukiID,
+                                'DeviceType'         => $deviceType,
                                 'ProductDesignation' => $productDesignation,
-                                'create' => [
-                                    'moduleID' => self::NUKI_SMARTLOCK_GUID,
-                                    'name' => $deviceName . ' (Bridge API)',
+                                'create'             => [
+                                    'moduleID'      => self::NUKI_SMARTLOCK_GUID,
+                                    'name'          => $deviceName . ' (Bridge API)',
                                     'configuration' => [
-                                        'SmartLockUID' => (string)$nukiID,
-                                        'SmartLockName' => (string)$deviceName
+                                        'SmartLockUID'  => (string) $nukiID,
+                                        'SmartLockName' => (string) $deviceName
                                     ],
                                     'location' => $location
                                 ]
@@ -129,15 +129,15 @@ class NukiConfiguratorBridgeAPI extends IPSModule
                             $this->SendDebug(__FUNCTION__ . ' Opener ID ', json_encode($nukiID), 0);
                             $this->SendDebug(__FUNCTION__ . ' Opener Instance ID ', json_encode($instanceID), 0);
                             $value = [
-                                'DeviceID' => $nukiID,
-                                'DeviceType' => $deviceType,
+                                'DeviceID'           => $nukiID,
+                                'DeviceType'         => $deviceType,
                                 'ProductDesignation' => 'Opener',
-                                'create' => [
-                                    'moduleID' => self::NUKI_OPENER_GUID,
-                                    'name' => $deviceName . ' (Bridge API)',
+                                'create'             => [
+                                    'moduleID'      => self::NUKI_OPENER_GUID,
+                                    'name'          => $deviceName . ' (Bridge API)',
                                     'configuration' => [
-                                        'OpenerUID' => (string)$nukiID,
-                                        'OpenerName' => (string)$deviceName
+                                        'OpenerUID'  => (string) $nukiID,
+                                        'OpenerName' => (string) $deviceName
                                     ],
                                     'location' => $location
                                 ]
@@ -170,11 +170,11 @@ class NukiConfiguratorBridgeAPI extends IPSModule
                 }
                 //However, if a device UID is not a found device UID or has multiple instances, they are erroneous
                 $values[] = [
-                    'DeviceID' => $deviceUID,
-                    'DeviceType' => '',
+                    'DeviceID'           => $deviceUID,
+                    'DeviceType'         => '',
                     'ProductDesignation' => $this->Translate('Device not found!'),
-                    'name' => IPS_GetName($instanceID),
-                    'instanceID' => $instanceID
+                    'name'               => IPS_GetName($instanceID),
+                    'instanceID'         => $instanceID
                 ];
             }
         }
@@ -223,17 +223,17 @@ class NukiConfiguratorBridgeAPI extends IPSModule
                             $this->SendDebug(__FUNCTION__ . ' Smart Lock ID ', json_encode($nukiID), 0);
                             $this->SendDebug(__FUNCTION__ . ' Smart Lock Instance ID ', json_encode($instanceID), 0);
                             $values[] = [
-                                'DeviceID' => $nukiID,
-                                'DeviceType' => $deviceType,
+                                'DeviceID'           => $nukiID,
+                                'DeviceType'         => $deviceType,
                                 'ProductDesignation' => $productDesignation,
-                                'name' => $deviceName,
-                                'instanceID' => $instanceID,
-                                'create' => [
-                                    'moduleID' => self::NUKI_SMARTLOCK_GUID,
-                                    'name' => $deviceName . ' (Bridge API)',
+                                'name'               => $deviceName,
+                                'instanceID'         => $instanceID,
+                                'create'             => [
+                                    'moduleID'      => self::NUKI_SMARTLOCK_GUID,
+                                    'name'          => $deviceName . ' (Bridge API)',
                                     'configuration' => [
-                                        'SmartLockUID' => (string)$nukiID,
-                                        'SmartLockName' => (string)$deviceName
+                                        'SmartLockUID'  => (string) $nukiID,
+                                        'SmartLockName' => (string) $deviceName
                                     ],
                                     'location' => $location
                                 ]
@@ -245,17 +245,17 @@ class NukiConfiguratorBridgeAPI extends IPSModule
                             $this->SendDebug(__FUNCTION__ . ' Opener ID ', json_encode($nukiID), 0);
                             $this->SendDebug(__FUNCTION__ . ' Opener Instance ID ', json_encode($instanceID), 0);
                             $values[] = [
-                                'DeviceID' => $nukiID,
-                                'DeviceType' => $deviceType,
+                                'DeviceID'           => $nukiID,
+                                'DeviceType'         => $deviceType,
                                 'ProductDesignation' => 'Opener',
-                                'name' => $deviceName,
-                                'instanceID' => $instanceID,
-                                'create' => [
-                                    'moduleID' => self::NUKI_OPENER_GUID,
-                                    'name' => $deviceName . ' (Bridge API)',
+                                'name'               => $deviceName,
+                                'instanceID'         => $instanceID,
+                                'create'             => [
+                                    'moduleID'      => self::NUKI_OPENER_GUID,
+                                    'name'          => $deviceName . ' (Bridge API)',
                                     'configuration' => [
-                                        'OpenerUID' => (string)$nukiID,
-                                        'OpenerName' => (string)$deviceName
+                                        'OpenerUID'  => (string) $nukiID,
+                                        'OpenerName' => (string) $deviceName
                                     ],
                                     'location' => $location
                                 ]
