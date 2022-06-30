@@ -74,6 +74,13 @@ Es muss zwingend der HTTP API Token der Nuki Bridge verwendet werden.
 Andere API Token, wie z.B. ein Nuki Web-API Token funktionieren nicht.  
 Wenn Sie Ihren API Token bereits kennen, können Sie im Entwicklerbereich diesen manuell hinzufügen.  
 
+Für den verschlüsselten API Token (encrypted API token) wird nachfolgende Firmware der Bridge benötigt:  
+
+Bridge 1.0, min. Beta 1.22.1  
+Bridge 2.0, min. Beta 2.14.0  
+
+[Bridge Beta Firmware](https://developer.nuki.io/c/beta-program/bridge-beta/30)
+
 __Schaltflächen im Entwicklerbereich__:
 
 Name                                | Beschreibung

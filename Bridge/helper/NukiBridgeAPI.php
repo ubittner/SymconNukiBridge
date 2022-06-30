@@ -378,15 +378,18 @@ trait NukiBridgeAPI
                 break;
 
             default:
-                $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'token=' . $token;
                 if ($this->ReadPropertyBoolean('UseEncryption')) {
-                    $timestamp = gmdate("Y-m-d\TH:i:s\Z");
-                    $randomNumber = random_int(0, 65535);
-                    $data = $timestamp . ',' . $randomNumber . ',' . $token;
-                    $hash = hash('sha256', $data);
-                    $token = 'ts=' . $timestamp . '&rnr=' . $randomNumber . '&hash=' . $hash;
-                    $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . $token;
-                    $this->SendDebug(__FUNCTION__, $url, 0);
+                    //New encrypted token
+                    $this->SendDebug(__FUNCTION__, 'Encrypted token used!', 0);
+                    $apiToken = utf8_encode($this->ReadAttributeString('BridgeAPIToken'));
+                    $key = hash('sha256', $apiToken, true);
+                    $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+                    $timestamp = utf8_encode(gmdate("Y-m-d\TH:i:s\Z") . ',' . random_int(0, 65535));
+                    $cToken = bin2hex(sodium_crypto_secretbox($timestamp, $nonce, $key));
+                    $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'ctoken=' . $cToken . '&nonce=' . bin2hex($nonce);
+                } else {
+                    $this->SendDebug(__FUNCTION__, 'Plain token used!', 0);
+                    $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'token=' . $token;
                 }
         }
         $this->SendDebug(__FUNCTION__, $url, 0);

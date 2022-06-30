@@ -9,7 +9,7 @@
       "An error has occurred!": "Es ist ein Fehler aufgetreten!",
       "Get Token": "Token abrufen",
       "Encrypt Bridge API Token": "Bridge API Token verschlüsseln",
-      "If the Bridge API token is to be transmitted encrypted, please pay attention to synchronous times of IP-Symcon and the Nuki Bridge.": "Wenn der Bridge API Token verschlüsselt übertragen werden soll, so achten Sie bitte auf synchrone Zeiten von IP-Symcon und der Nuki Bridge.",
+      "The previously used hashed token method is deprecated, encrypted token is used now.\n\nRequired bridge firmware version\n\nBridge 1.0\t1.22.1 or newer\nBridge 2.0\t2.14.0 or newer\n\nWhen the Bridge API token is transmitted encrypted, please pay attention to synchronous times of IP-Symcon and the Nuki Bridge.": "Die früher verwendete Hash-Token-Methode ist veraltet, es wird jetzt ein verschlüsseltes Token verwendet.\n\nErforderliche Bridge Firmware Version\n\nBridge 1.0\tmin. 1.22.1\nBridge 2.0\tmin. 2.14.0\n\nWenn der Bridge API Token verschlüsselt übertragen wird, so achten Sie bitte auf synchrone Zeiten von IP-Symcon und der Nuki Bridge.",
       "Network Timeout": "Netzwerk Timeout",
       "Milliseconds": "Millisekunden",
       "Use automatic update": "Status automatisch aktualisieren",
