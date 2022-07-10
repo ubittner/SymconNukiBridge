@@ -61,7 +61,8 @@ Bridge Port                     | Port der Nuki Bridge
 Bridge API Token abrufen        | Ruft den HTTP API Token der Nuki Bridge ab
 Bridge API Key verschlüsseln    | Verschlüsselt den API Token für die Kommunikation   
 Bridge ID (optional)            | ID der Nuki Bridge
-Netzwerk Timeout                | Netzwerk Timeout
+Netzwerk Timeout                | Netzwerk Timeout für den Verbindungsaufbau
+Maximale Ausführungszeit        | Maximale Ausführungszeit für den Schaltbefehl
 Status automatischaktualisieren | Aktualisiert automatisch den Status mittels Webhook
 Host IP-Adresse (IP-Symcon)     | IP-Adresse des IP-Symcon Host für den Webhook
 Host Port (IP-Symcon)           | Port des IP-Symcon Host für den Webhook

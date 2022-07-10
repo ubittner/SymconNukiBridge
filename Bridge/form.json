@@ -89,6 +89,12 @@
       "suffix": "Milliseconds"
     },
     {
+      "type": "NumberSpinner",
+      "name": "ExecutionTimeout",
+      "caption": "Execution Timeout",
+      "suffix": "Seconds"
+    },
+    {
       "type": "RowLayout",
       "items": [
         {
