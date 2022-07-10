@@ -407,7 +407,7 @@ trait NukiBridgeAPI
             CURLOPT_RETURNTRANSFER    => true,
             CURLOPT_FAILONERROR       => true,
             CURLOPT_CONNECTTIMEOUT_MS => $this->ReadPropertyInteger('Timeout'),
-            CURLOPT_TIMEOUT           => $this->ReadPropertyString('ExecutionTimeout')]);
+            CURLOPT_TIMEOUT           => $this->ReadPropertyInteger('ExecutionTimeout')]);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         if (!curl_errno($ch)) {
