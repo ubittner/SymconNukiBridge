@@ -70,7 +70,7 @@
             "items": [
               {
                 "type": "Label",
-                "caption": "If the Bridge API token is to be transmitted encrypted, please pay attention to synchronous times of IP-Symcon and the Nuki Bridge."
+                "caption": "The previously used hashed token method is deprecated, encrypted token is used now.\n\nRequired bridge firmware version\n\nBridge 1.0\t1.22.1 or newer\nBridge 2.0\t2.14.0 or newer\n\nWhen the Bridge API token is transmitted encrypted, please pay attention to synchronous times of IP-Symcon and the Nuki Bridge."
               }
             ]
           }
@@ -87,6 +87,12 @@
       "name": "Timeout",
       "caption": "Network Timeout",
       "suffix": "Milliseconds"
+    },
+    {
+      "type": "NumberSpinner",
+      "name": "ExecutionTimeout",
+      "caption": "Execution Timeout",
+      "suffix": "Seconds"
     },
     {
       "type": "RowLayout",

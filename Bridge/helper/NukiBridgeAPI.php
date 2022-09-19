@@ -7,7 +7,7 @@ declare(strict_types=1);
 
 trait NukiBridgeAPI
 {
-    private string $apiVersion = '1.13.1';
+    private string $apiVersion = '1.13.2';
 
     /**
      * Enables the API.
@@ -378,23 +378,27 @@ trait NukiBridgeAPI
                 break;
 
             default:
-                $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'token=' . $token;
                 if ($this->ReadPropertyBoolean('UseEncryption')) {
-                    $timestamp = gmdate("Y-m-d\TH:i:s\Z");
-                    $randomNumber = random_int(0, 65535);
-                    $data = $timestamp . ',' . $randomNumber . ',' . $token;
-                    $hash = hash('sha256', $data);
-                    $token = 'ts=' . $timestamp . '&rnr=' . $randomNumber . '&hash=' . $hash;
-                    $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . $token;
-                    $this->SendDebug(__FUNCTION__, $url, 0);
+                    //New encrypted token
+                    $this->SendDebug(__FUNCTION__, 'Encrypted token used!', 0);
+                    $apiToken = utf8_encode($this->ReadAttributeString('BridgeAPIToken'));
+                    $key = hash('sha256', $apiToken, true);
+                    $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
+                    $timestamp = utf8_encode(gmdate("Y-m-d\TH:i:s\Z") . ',' . random_int(0, 65535));
+                    $cToken = bin2hex(sodium_crypto_secretbox($timestamp, $nonce, $key));
+                    $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'ctoken=' . $cToken . '&nonce=' . bin2hex($nonce);
+                } else {
+                    $this->SendDebug(__FUNCTION__, 'Plain token used!', 0);
+                    $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'token=' . $token;
                 }
         }
         $this->SendDebug(__FUNCTION__, $url, 0);
         $body = '';
         //Enter semaphore
-        if (!IPS_SemaphoreEnter('Nuki_' . $this->InstanceID . '_SendDataToBridge', 5000)) {
+        if (!$this->LockSemaphore('BridgeData')) {
             $this->SendDebug(__FUNCTION__, 'Abort, Semaphore reached!', 0);
-            return json_encode(['httpCode' => 503, 'body' => []]);
+            $this->UnlockSemaphore('BridgeData');
+            return json_encode(['httpCode' => 0, 'body' => []]);
         }
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -402,7 +406,8 @@ trait NukiBridgeAPI
             CURLOPT_HEADER            => true,
             CURLOPT_RETURNTRANSFER    => true,
             CURLOPT_FAILONERROR       => true,
-            CURLOPT_CONNECTTIMEOUT_MS => $this->ReadPropertyInteger('Timeout')]);
+            CURLOPT_CONNECTTIMEOUT_MS => $this->ReadPropertyInteger('Timeout'),
+            CURLOPT_TIMEOUT           => $this->ReadPropertyInteger('ExecutionTimeout')]);
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         if (!curl_errno($ch)) {
@@ -423,9 +428,40 @@ trait NukiBridgeAPI
         }
         curl_close($ch);
         //Leave semaphore
-        IPS_SemaphoreLeave('Nuki_' . $this->InstanceID . '_SendDataToBridge');
+        $this->UnlockSemaphore('BridgeData');
+        //Result
         $result = ['httpCode' => $httpCode, 'body' => $body];
         $this->SendDebug(__FUNCTION__, 'Result: ' . json_encode($result), 0);
         return json_encode($result);
+    }
+
+    ########## Private
+
+    /**
+     * Attempts to set a semaphore and repeats this up to 100 times if unsuccessful.
+     * @param string $Name
+     * @return bool
+     */
+    private function LockSemaphore(string $Name): bool
+    {
+        for ($i = 0; $i < 100; $i++) {
+            if (IPS_SemaphoreEnter('Nuki_' . $this->InstanceID . '_SendDataToBridge_' . $Name, 1)) {
+                $this->SendDebug(__FUNCTION__, 'Semaphore locked', 0);
+                return true;
+            } else {
+                IPS_Sleep(mt_rand(1, 5));
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Deletes a semaphore.
+     * @param string $Name
+     */
+    private function UnlockSemaphore(string $Name): void
+    {
+        IPS_SemaphoreLeave('Nuki_' . $this->InstanceID . '_SendDataToBridge_' . $Name);
+        $this->SendDebug(__FUNCTION__, 'Semaphore unlocked', 0);
     }
 }

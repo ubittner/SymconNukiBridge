@@ -61,7 +61,8 @@ Bridge Port                     | Port der Nuki Bridge
 Bridge API Token abrufen        | Ruft den HTTP API Token der Nuki Bridge ab
 Bridge API Key verschlüsseln    | Verschlüsselt den API Token für die Kommunikation   
 Bridge ID (optional)            | ID der Nuki Bridge
-Netzwerk Timeout                | Netzwerk Timeout
+Netzwerk Timeout                | Netzwerk Timeout für den Verbindungsaufbau
+Maximale Ausführungszeit        | Maximale Ausführungszeit für den Schaltbefehl
 Status automatischaktualisieren | Aktualisiert automatisch den Status mittels Webhook
 Host IP-Adresse (IP-Symcon)     | IP-Adresse des IP-Symcon Host für den Webhook
 Host Port (IP-Symcon)           | Port des IP-Symcon Host für den Webhook
@@ -73,6 +74,13 @@ Hierfür muss die HTTP API Funktion der Nuki Bridge mittels der Nuki iOS / Andro
 Es muss zwingend der HTTP API Token der Nuki Bridge verwendet werden.  
 Andere API Token, wie z.B. ein Nuki Web-API Token funktionieren nicht.  
 Wenn Sie Ihren API Token bereits kennen, können Sie im Entwicklerbereich diesen manuell hinzufügen.  
+
+Für den verschlüsselten API Token (encrypted API token) wird nachfolgende Firmware der Bridge benötigt:  
+
+Bridge 1.0, min. Beta 1.22.1  
+Bridge 2.0, min. Beta 2.14.0  
+
+[Bridge Beta Firmware](https://developer.nuki.io/c/beta-program/bridge-beta/30)
 
 __Schaltflächen im Entwicklerbereich__:
 

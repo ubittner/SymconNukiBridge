@@ -29,6 +29,7 @@ class NukiSplitterBridgeAPI extends IPSModule
         $this->RegisterPropertyBoolean('UseEncryption', false);
         $this->RegisterPropertyString('BridgeID', '');
         $this->RegisterPropertyInteger('Timeout', 5000);
+        $this->RegisterPropertyInteger('ExecutionTimeout', 60);
         $this->RegisterPropertyBoolean('UseCallback', false);
         $this->RegisterPropertyString('SocketIP', (count(Sys_GetNetworkInfo()) > 0) ? Sys_GetNetworkInfo()[0]['IP'] : '');
         $this->RegisterPropertyInteger('SocketPort', 3777);

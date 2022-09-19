@@ -4,9 +4,9 @@
 
 [![IP-Symcon is awesome!](https://img.shields.io/badge/IP--Symcon-6.0-blue.svg)](https://www.symcon.de)
 [![Module Version](https://img.shields.io/badge/Module_Version-2.0-blue.svg)]()
-[![Module Build](https://img.shields.io/badge/Module_Build-3-blue.svg)]()
-[![Module Date](https://img.shields.io/badge/Module_Date-20220302-blue.svg)]()  
-[![Version](https://img.shields.io/badge/NUKI_API_Version-1.13.0-yellow.svg)](https://developer.nuki.io/t/bridge-http-api/26)  
+[![Module Build](https://img.shields.io/badge/Module_Build-5-blue.svg)]()
+[![Module Date](https://img.shields.io/badge/Module_Date-20220710-blue.svg)]()  
+[![Version](https://img.shields.io/badge/NUKI_API_Version-1.13.2-yellow.svg)](https://developer.nuki.io/t/bridge-http-api/26)  
 [![Check Style](https://github.com/ubittner/SymconNukiWeb/workflows/Check%20Style/badge.svg)](https://github.com/ubittner/SymconNukiWeb/actions)
 [![Run Tests](https://github.com/ubittner/SymconNukiWeb/workflows/Run%20Tests/badge.svg)](https://github.com/ubittner/SymconNukiWeb/actions)  
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
