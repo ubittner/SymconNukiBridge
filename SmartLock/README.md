@@ -10,7 +10,7 @@ Bevor das Modul installiert wird, sollte unbedingt ein Backup von IP-Symcon durc
 Der Entwickler haftet nicht für eventuell auftretende Datenverluste oder sonstige Schäden.  
 Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklich zu.  
 
-### Inhaltverzeichnis
+### Inhaltsverzeichnis
 
 1. [Funktionsumfang](#1-funktionsumfang)
 2. [Voraussetzungen](#2-voraussetzungen)
@@ -43,7 +43,7 @@ Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklic
 - Hier finden Sie die [Dokumentation](../Discovery) zur `Nuki Discovery (Bridge API)` Instanz.
 
 * Alternativ können Sie die `Nuki Splitter (Bridge API)` Splitter Instanz auch manuell anlegen.
-* Hier finden Sie die [Dokumentation ](../Bridge) zur `Nuki Splitter (Bridge API)` Instanz.
+* Hier finden Sie die [Dokumentation](../Bridge) zur `Nuki Splitter (Bridge API)` Instanz.
 
 - Sofern noch keine `Nuki Konfigurator (Bridge API)` Instanz in IP-Symcon vorhanden ist, so beginnen Sie mit der Installation der `Nuki Konfigurator (Bridge API)` Instanz.
 - Hier finden Sie die [Dokumentation](../Configurator) zur `Nuki Konfigurator (Bridge API)` Instanz.
@@ -57,24 +57,24 @@ Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklic
 
 __Konfigurationsseite__:
 
-Name                                    | Beschreibung
-----------------------------------------| ---------------------------------
-Nuki ID                                 | Nuki UID des Smart Locks
-Bezeichnung                             | Bezeichnung des Smart Locks
-Status automatisch aktualisieren        | Status automatisch aktualisieren
-Alternativer Aktualisierungsintervall   | Intervall zur alternativen Aktualisierung
-Türsensor                               | Türsensor Informationen anzeigen
-Keypad                                  | Keypad Informationen anzeigen
-Protokoll verwenden                     | Protokoll verwenden
-Anzahl der maximalen Einträge           | Anzahl der maximalen Einträge
+| Name                                  | Beschreibung                              |
+|---------------------------------------|-------------------------------------------|
+| Nuki ID                               | Nuki UID des Smart Locks                  |
+| Bezeichnung                           | Bezeichnung des Smart Locks               |
+| Status automatisch aktualisieren      | Status automatisch aktualisieren          |
+| Alternativer Aktualisierungsintervall | Intervall zur alternativen Aktualisierung |
+| Türsensor                             | Türsensor Informationen anzeigen          |
+| Keypad                                | Keypad Informationen anzeigen             |
+| Protokoll verwenden                   | Protokoll verwenden                       |
+| Anzahl der maximalen Einträge         | Anzahl der maximalen Einträge             |
 
 __Schaltflächen im Aktionsbereich__:
 
-Name                    | Beschreibung
------------------------ | ---------------------------------
-Entwicklerbereich       |
-Gerätetyp ermitteln     | Ermittelt den Gerätetyp
-Status aktualisieren    | Aktualisiert den Status
+| Name                 | Beschreibung            |
+|----------------------|-------------------------|
+| Entwicklerbereich    |                         |
+| Gerätetyp ermitteln  | Ermittelt den Gerätetyp |
+| Status aktualisieren | Aktualisiert den Status |
 
 __Vorgehensweise__:  
 
@@ -87,32 +87,32 @@ Das Löschen einzelner kann zu Fehlfunktionen führen.
 
 ##### Statusvariablen
 
-Name                            | Typ     | Beschreibung
-------------------------------- | ------- | -------------------------------------------------------------
-SmartLock                       | integer | Smart Lock Aktionen (auf- und zusperren + weitere Funktionen)
-DeviceState                     | integer | Gerätestatus (diverse)
-BatteryState                    | boolean | Batteriestatus (OK, Batterie schwach)
-BatteryCharge                   | integer | Batterieladung (in %)
-BatteryCharging                 | boolean | Batterieaufladung (In- / Aktiv)
-DoorState                       | integer | Türstatus (diverse)
-KeypadBatteryState              | boolean | Keypad Batteriestatus (OK, Batterie schwach)
-ActivityLog                     | string  | Protokoll
+| Name               | Typ     | Beschreibung                                                  |
+|--------------------|---------|---------------------------------------------------------------|
+| SmartLock          | integer | Smart Lock Aktionen (auf- und zusperren + weitere Funktionen) |
+| DeviceState        | integer | Gerätestatus (diverse)                                        |
+| BatteryState       | boolean | Batteriestatus (OK, Batterie schwach)                         |
+| BatteryCharge      | integer | Batterieladung (in %)                                         |
+| BatteryCharging    | boolean | Batterieaufladung (In- / Aktiv)                               |
+| DoorState          | integer | Türstatus (diverse)                                           |
+| KeypadBatteryState | boolean | Keypad Batteriestatus (OK, Batterie schwach)                  |
+| ActivityLog        | string  | Protokoll                                                     |
 
 ##### Profile:
 
 NUKISLB.InstanzID.Name
 
-Name                    | Typ
------------------------ | -------
-SmartLock               | integer
-DeviceState             | integer
-BatteryState            | boolean
-BatteryCharge           | integer
-BatteryCharging         | boolean
-DoorState               | integer
-KeypadBatteryState      | boolean
+| Name               | Typ     |
+|--------------------|---------|
+| SmartLock          | integer |
+| DeviceState        | integer |
+| BatteryState       | boolean |
+| BatteryCharge      | integer |
+| BatteryCharging    | boolean |
+| DoorState          | integer |
+| KeypadBatteryState | boolean |
 
-Wird die `Nuki Smart Lock (Bridge API)` Instanz  gelöscht, so werden automatisch die oben aufgeführten Profile gelöscht.
+Wird die `Nuki Smart Lock (Bridge API)` Instanz gelöscht, so werden automatisch die oben aufgeführten Profile gelöscht.
 
 ### 6. WebFront
 
@@ -140,13 +140,13 @@ $InstanzID:     Instanz ID des Nuki Smart Locks
 $Aktion:        Führt eine Aktion für das Nuki Smart Lock gemäss Tabelle aus:  
 ```
 
-Wert | Smart Lock Aktion            | Smart Lock Aktion (deutsch)          
----- | ---------------------------- | -----------------------------------------------------------
-0    | lock                         | zusperren
-1    | unlock                       | aufsperren
-2    | unlatch                      | entriegeln
-3    | lock ‘n’ go                  | automatisch aufsperren und wieder zusperren
-4    | lock ‘n’ go with unlatch     | automatisch aufsperren mit entriegeln und wieder zusperren
+| Wert | Smart Lock Aktion        | Smart Lock Aktion (deutsch)                                |
+|------|--------------------------|------------------------------------------------------------|
+| 0    | lock                     | zusperren                                                  |
+| 1    | unlock                   | aufsperren                                                 |
+| 2    | unlatch                  | entriegeln                                                 |
+| 3    | lock ‘n’ go              | automatisch aufsperren und wieder zusperren                |
+| 4    | lock ‘n’ go with unlatch | automatisch aufsperren mit entriegeln und wieder zusperren |
 
 ```text
 Beispiel:  

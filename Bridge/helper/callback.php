@@ -1,11 +1,15 @@
 <?php
 
+/** @noinspection HttpUrlsUsage */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
 trait Helper_callback
 {
+    /**
+     * @throws Exception
+     */
     public function ManageCallback(): void
     {
         //Get all callbacks from bridge
@@ -54,7 +58,7 @@ trait Helper_callback
                 }
             }
         } else {
-            $this->SendDebug(__FUNCTION__, "Callback cloudn't be managed. Please check manually!", 0);
+            $this->SendDebug(__FUNCTION__, "Callback couldn't be managed. Please check manually!", 0);
         }
     }
 }

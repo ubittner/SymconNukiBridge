@@ -11,19 +11,16 @@ class NukiDiscoveryBridgeAPI extends IPSModule
     private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
     private const NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
 
-    public function Create()
+    /**
+     * @return void
+     */
+    public function Create(): void
     {
         //Never delete this line!
         parent::Create();
     }
 
-    public function Destroy()
-    {
-        //Never delete this line!
-        parent::Destroy();
-    }
-
-    public function ApplyChanges()
+    public function ApplyChanges(): void
     {
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
@@ -32,7 +29,7 @@ class NukiDiscoveryBridgeAPI extends IPSModule
         parent::ApplyChanges();
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
         if (!empty($Data)) {
@@ -40,19 +37,16 @@ class NukiDiscoveryBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Data[' . $key . '] = ' . json_encode($value), 0);
             }
         }
-        switch ($Message) {
-            case IPS_KERNELSTARTED:
-                $this->KernelReady();
-                break;
-
+        if ($Message == IPS_KERNELSTARTED) {
+            $this->KernelReady();
         }
     }
 
-    public function GetConfigurationForm()
+    public function GetConfigurationForm(): string
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $library = IPS_GetLibrary(self::LIBRARY_GUID);
-        $formData['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ' vom ' . date('d.m.Y', $library['Date']);
+        $formData['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ', ' . date('d.m.Y', $library['Date']);
         $bridges = $this->DiscoverBridges();
         if (empty($bridges)) {
             $formData['actions'][] = [
@@ -97,7 +91,7 @@ class NukiDiscoveryBridgeAPI extends IPSModule
             CURLOPT_URL            => $endpoint,
             CURLOPT_HEADER         => false,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_TIMEOUT, 15]);
+            CURLOPT_TIMEOUT        => 15]);
         $response = curl_exec($ch);
         if ($response) {
             $result = json_decode($response);
@@ -119,7 +113,7 @@ class NukiDiscoveryBridgeAPI extends IPSModule
 
     #################### Private
 
-    private function KernelReady()
+    private function KernelReady(): void
     {
         $this->ApplyChanges();
     }

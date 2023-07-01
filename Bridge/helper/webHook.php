@@ -1,7 +1,6 @@
 <?php
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
-/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
@@ -10,7 +9,7 @@ trait Helper_webHook
     /**
      * This function will be called by the hook control. It will forward the incoming data to all children.
      */
-    protected function ProcessHookData()
+    protected function ProcessHookData(): void
     {
         $this->SendDebug(__FUNCTION__ . ' Incoming Data: ', print_r($_SERVER, true), 0);
         // Get content
@@ -30,7 +29,7 @@ trait Helper_webHook
      *
      * @param $WebHook
      */
-    private function RegisterHook($WebHook)
+    private function RegisterHook($WebHook): void
     {
         $ids = IPS_GetInstanceListByModuleID(self::CORE_WEBHOOK_GUID);
         if (count($ids) > 0) {
@@ -59,7 +58,7 @@ trait Helper_webHook
      *
      * @param $WebHook
      */
-    private function UnregisterHook($WebHook)
+    private function UnregisterHook($WebHook): void
     {
         $ids = IPS_GetInstanceListByModuleID(self::CORE_WEBHOOK_GUID);
         if (count($ids) > 0) {

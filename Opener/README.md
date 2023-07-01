@@ -10,7 +10,7 @@ Bevor das Modul installiert wird, sollte unbedingt ein Backup von IP-Symcon durc
 Der Entwickler haftet nicht für eventuell auftretende Datenverluste oder sonstige Schäden.  
 Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklich zu.
 
-### Inhaltverzeichnis
+### Inhaltsverzeichnis
 
 1. [Funktionsumfang](#1-funktionsumfang)
 2. [Voraussetzungen](#2-voraussetzungen)
@@ -45,7 +45,7 @@ Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklic
 - Hier finden Sie die [Dokumentation](../Discovery) zur `Nuki Discovery (Bridge API)` Instanz.  
 
 * Alternativ können Sie die `Nuki Splitter (Bridge API)` Splitter Instanz auch manuell anlegen.
-* Hier finden Sie die [Dokumentation ](../Bridge) zur `Nuki Splitter (Bridge API)` Instanz.
+* Hier finden Sie die [Dokumentation](../Bridge) zur `Nuki Splitter (Bridge API)` Instanz.
 
 - Sofern noch keine `Nuki Konfigurator (Bridge API)` Instanz in IP-Symcon vorhanden ist, so beginnen Sie mit der Installation der `Nuki Konfigurator (Bridge API)` Instanz.  
 - Hier finden Sie die [Dokumentation](../Configurator) zur `Nuki Konfigurator (Bridge API)` Instanz.
@@ -59,22 +59,22 @@ Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklic
 
 __Konfigurationsseite__:
 
-Name                                    | Beschreibung
-----------------------------------------| ---------------------------------
-Nuki ID                                 | Nuki UID des Openers
-Bezeichnung                             | Bezeichnung des Openers
-Status automatisch aktualisieren        | Status automatisch aktualisieren
-Alternativer Aktualisierungsintervall   | Intervall zur alternativen Aktualisierung
-Protokoll verwenden                     | Protokoll verwenden
-Anzahl der maximalen Einträge           | Anzahl der maximalen Einträge
+| Name                                  | Beschreibung                              |
+|---------------------------------------|-------------------------------------------|
+| Nuki ID                               | Nuki UID des Openers                      |
+| Bezeichnung                           | Bezeichnung des Openers                   |
+| Status automatisch aktualisieren      | Status automatisch aktualisieren          |
+| Alternativer Aktualisierungsintervall | Intervall zur alternativen Aktualisierung |
+| Protokoll verwenden                   | Protokoll verwenden                       |
+| Anzahl der maximalen Einträge         | Anzahl der maximalen Einträge             |
 
 __Schaltflächen im Aktionsbereich__:
 
-Name                    | Beschreibung
------------------------ | ---------------------------------
-Entwicklerbereich       |
-Gerätetyp ermitteln     | Ermittelt den Gerätetyp
-Status aktualisieren    | Aktualisiert den Status
+| Name                 | Beschreibung            |
+|----------------------|-------------------------|
+| Entwicklerbereich    |                         |
+| Gerätetyp ermitteln  | Ermittelt den Gerätetyp |
+| Status aktualisieren | Aktualisiert den Status |
 
 __Vorgehensweise__:  
 
@@ -87,28 +87,28 @@ Das Löschen einzelner kann zu Fehlfunktionen führen.
 
 ##### Statusvariablen
 
-Name                            | Typ     | Beschreibung
-------------------------------- | ------- | ----------------------------------------------------
-Door                            | integer | Öffnet die Tür
-DeviceState                     | integer | Status des Openers (diverse)
-BatteryState                    | boolean | Batteriestatus (OK / Batterie schwach)
-RingToOpen                      | boolean | Ring To Open ein- / ausschalten
-ContinuousMode                  | boolean | Dauermodus  ein- / ausschalten
-RingActionState                 | boolean | Türklingel (Untätig / Es klingelt)
-ActivityLog                     | string  | Protokoll
+| Name            | Typ     | Beschreibung                           |
+|-----------------|---------|----------------------------------------|
+| Door            | integer | Öffnet die Tür                         |
+| DeviceState     | integer | Status des Openers (diverse)           |
+| BatteryState    | boolean | Batteriestatus (OK / Batterie schwach) |
+| RingToOpen      | boolean | Ring To Open ein- / ausschalten        |
+| ContinuousMode  | boolean | Dauermodus  ein- / ausschalten         |
+| RingActionState | boolean | Türklingel (Untätig / Es klingelt)     |
+| ActivityLog     | string  | Protokoll                              |
 
 ##### Profile:
 
 NUKIOB.InstanzID.Name
 
-Name                    | Typ
------------------------ | -------
-Door                    | integer
-DeviceState             | integer
-BatteryState            | boolean
-RingActionState         | boolean
+| Name            | Typ     |
+|-----------------|---------|
+| Door            | integer |
+| DeviceState     | integer |
+| BatteryState    | boolean |
+| RingActionState | boolean |
 
-Wird die `Nuki Opener (Bridge API)` Instanz  gelöscht, so werden automatisch die oben aufgeführten Profile gelöscht.
+Wird die `Nuki Opener (Bridge API)` Instanz gelöscht, so werden automatisch die oben aufgeführten Profile gelöscht.
 
 ### 6. WebFront
 
@@ -148,7 +148,7 @@ Dein Smartphone wird erkannt, sobald du in der Nähe bist.
 
 NUKIOB_ToggleRingToOpen(integer $InstanzID, boolean $Status);  
 
-$Status: false = auschalten, true = einschalten
+$Status: false = ausschalten, true = einschalten
 
 Gibt bei Erfolg als Rückgabewert true zurück, andernfalls false.    
 
