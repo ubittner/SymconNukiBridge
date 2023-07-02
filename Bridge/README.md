@@ -2,14 +2,14 @@
 ### Nuki Splitter (Bridge API)
 [![Image](../imgs/NUKI_Bridge.png)]()
 
-Diese Modul integriert die [NUKI Bridge](https://nuki.io/de/bridge/) in [IP-Symcon](https://www.symcon.de) mittels der [Nuki Bridge HTTP-API](https://developer.nuki.io/t/bridge-http-api/26).  
+Dieses Modul integriert die [NUKI Bridge](https://nuki.io/de/bridge/) in [IP-Symcon](https://www.symcon.de) mittels der [Nuki Bridge HTTP-API](https://developer.nuki.io/t/bridge-http-api/26).  
 
 Für dieses Modul besteht kein Anspruch auf Fehlerfreiheit, Weiterentwicklung, sonstige Unterstützung oder Support.  
 Bevor das Modul installiert wird, sollte unbedingt ein Backup von IP-Symcon durchgeführt werden.  
 Der Entwickler haftet nicht für eventuell auftretende Datenverluste oder sonstige Schäden.  
 Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklich zu.
 
-### Inhaltverzeichnis
+### Inhaltsverzeichnis
 
 1. [Funktionsumfang](#1-funktionsumfang)
 2. [Voraussetzungen](#2-voraussetzungen)
@@ -28,7 +28,7 @@ Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklic
 
 ### 2. Voraussetzungen
 
-- IP-Symcon ab Version 6.0
+- IP-Symcon ab Version 7.0
 - Nuki Bridge
 - Aktivierte HTTP API Funktion der Nuki Bridge mittels der Nuki iOS / Android App
 - Nuki Smart Lock 1.0, 2.0, 3.0 (Pro)
@@ -54,18 +54,18 @@ Lesen Sie bitte dafür diese Dokumentation weiter durch.
 
 __Konfigurationsseite__:
 
-Name                            | Beschreibung
---------------------------------| ---------------------------------------------------
-Bridge IP-Adresse               | IP-Adresse der Nuki Bridge
-Bridge Port                     | Port der Nuki Bridge
-Bridge API Token abrufen        | Ruft den HTTP API Token der Nuki Bridge ab
-Bridge API Key verschlüsseln    | Verschlüsselt den API Token für die Kommunikation   
-Bridge ID (optional)            | ID der Nuki Bridge
-Netzwerk Timeout                | Netzwerk Timeout für den Verbindungsaufbau
-Maximale Ausführungszeit        | Maximale Ausführungszeit für den Schaltbefehl
-Status automatischaktualisieren | Aktualisiert automatisch den Status mittels Webhook
-Host IP-Adresse (IP-Symcon)     | IP-Adresse des IP-Symcon Host für den Webhook
-Host Port (IP-Symcon)           | Port des IP-Symcon Host für den Webhook
+| Name                             | Beschreibung                                        |
+|----------------------------------|-----------------------------------------------------|
+| Bridge IP-Adresse                | IP-Adresse der Nuki Bridge                          |
+| Bridge Port                      | Port der Nuki Bridge                                |
+| Bridge API Token abrufen         | Ruft den HTTP API Token der Nuki Bridge ab          |
+| Bridge API Key verschlüsseln     | Verschlüsselt den API Token für die Kommunikation   |
+| Bridge ID (optional)             | ID der Nuki Bridge                                  |
+| Netzwerk Timeout                 | Netzwerk Timeout für den Verbindungsaufbau          |
+| Maximale Ausführungszeit         | Maximale Ausführungszeit für den Schaltbefehl       |
+| Status automatisch aktualisieren | Aktualisiert automatisch den Status mittels Webhook |
+| Host IP-Adresse (IP-Symcon)      | IP-Adresse des IP-Symcon Host für den Webhook       |
+| Host Port (IP-Symcon)            | Port des IP-Symcon Host für den Webhook             |
 
 Hinweis:  
 Bei der Ersteinrichtung der Nuki Bridge mittels der Nuki iOS / Android App auf dem Smartphone wurden Ihnen die Daten angezeigt.  
@@ -84,21 +84,21 @@ Bridge 2.0, min. Beta 2.14.0
 
 __Schaltflächen im Entwicklerbereich__:
 
-Name                                | Beschreibung
------------------------------------ | --------------------------------------------------------------
-Bridge                              | 
-Token / Token übernehmen            | Manuelle Eingabe und Übernahme des HTTP API Tokens
-Info anzeigen                       | Zeigt weitere Informationen der Nuki Bridge an
-Logdatei anzeigen                   | Zeigt die Logdatei der Nuki Bridge an
-Logdatei löschen                    | Löscht die Logdatei der Nuki Bridge
-Firmware aktualisieren              | Führt eine aktualisierung der Firmware durch
-Neustart                            | Starte die Nuki Bridge neu
-Werkseinstellungen                  | Setzt die Nuki Brige zurück in die Werkseinstellungen
-Gekoppelte Geräte anzeigen          | Zeigt die gekoppelten Nuki Geräte der Nuki Bridge an
-Callback                            |
-Anzeigen                            | Zeigt die angelegten Callbacks auf der Nuki Bridge an
-Löschen                             | Löscht den Callback mit der definierten ID von der Nuki Bridge
-  
+| Name                       | Beschreibung                                                   |
+|----------------------------|----------------------------------------------------------------|
+| Bridge                     |                                                                |
+| Token / Token übernehmen   | Manuelle Eingabe und Übernahme des HTTP API Tokens             |
+| Info anzeigen              | Zeigt weitere Informationen der Nuki Bridge an                 |
+| Logdatei anzeigen          | Zeigt die Logdatei der Nuki Bridge an                          |
+| Logdatei löschen           | Löscht die Logdatei der Nuki Bridge                            |
+| Firmware aktualisieren     | Führt eine aktualisierung der Firmware durch                   |
+| Neustart                   | Starte die Nuki Bridge neu                                     |
+| Werkseinstellungen         | Setzt die Nuki Brige zurück in die Werkseinstellungen          |
+| Gekoppelte Geräte anzeigen | Zeigt die gekoppelten Nuki Geräte der Nuki Bridge an           |
+| Callback                   |                                                                |
+| Anzeigen                   | Zeigt die angelegten Callbacks auf der Nuki Bridge an          |
+| Löschen                    | Löscht den Callback mit der definierten ID von der Nuki Bridge |
+
 __Vorgehensweise__:
 
 Geben Sie die IP-Adresse, den Port, den Netzwerk-Timeout und den API Token der Nuki Bridge an.  
@@ -214,13 +214,13 @@ $Aktion:
 Führt eine Aktion für das NUKI Gerät gemäss Tabelle aus:  
 ```
 
-Wert | Smart Lock                   | Opener
------|------------------------------|---------------------------
-1    | unlock                       | activate rto
-2    | lock                         | deactivate rto
-3    | unlatch                      | electric strike actuation
-4    | lock ‘n’ go                  | activate continuous mode
-5    | lock ‘n’ go with unlatch     | deactivate continuous mode
+| Wert | Smart Lock               | Opener                     |
+|------|--------------------------|----------------------------|
+| 1    | unlock                   | activate rto               |
+| 2    | lock                     | deactivate rto             |
+| 3    | unlatch                  | electric strike actuation  |
+| 4    | lock ‘n’ go              | activate continuous mode   |
+| 5    | lock ‘n’ go with unlatch | deactivate continuous mode |
 
 ```  
 Beispiel:  

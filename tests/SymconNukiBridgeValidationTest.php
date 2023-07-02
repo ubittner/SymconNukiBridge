@@ -6,32 +6,32 @@ include_once __DIR__ . '/stubs/Validator.php';
 
 class SymconNukiBridgeValidationTest extends TestCaseSymconValidation
 {
-    public function testValidateSymconNukiBridge(): void
+    public function testValidateLibrary(): void
     {
         $this->validateLibrary(__DIR__ . '/..');
     }
 
-    public function testValidateBridgeModule(): void
+    public function testValidateModule_Bridge(): void
     {
         $this->validateModule(__DIR__ . '/../Bridge');
     }
 
-    public function testValidateConfiguratorModule(): void
+    public function testValidateModule_Configurator(): void
     {
         $this->validateModule(__DIR__ . '/../Configurator');
     }
 
-    public function testValidateDiscoveryModule(): void
+    public function testValidateModule_Discovery(): void
     {
         $this->validateModule(__DIR__ . '/../Discovery');
     }
 
-    public function testValidateOpenerModule(): void
+    public function testValidateModule_Opener(): void
     {
         $this->validateModule(__DIR__ . '/../Opener');
     }
 
-    public function testValidateSmartLockModule(): void
+    public function testValidateModule_SmartLock(): void
     {
         $this->validateModule(__DIR__ . '/../SmartLock');
     }

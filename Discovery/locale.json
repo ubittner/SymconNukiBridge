@@ -1,10 +1,10 @@
 {
-  "translations": {
-    "de": {
-      "This instance can determine the Nuki bridges connected to the Nuki server.": "Diese Instanz kann die mit dem Nuki Server verbundenen Nuki Bridges ermitteln.",
-      "An existing internet connection and an activated HTTP API function of the Nuki Bridge is required.": "Es wird eine bestehende Internetverbindung und eine aktivierte HTTP API Funktion der Nuki Bridge benötigt.",
-      "No bridge found! Please enable the HTTP API function of the bridge in the NUKI app (iOS / Android).": "Keine Bridge gefunden! Bitte aktivieren Sie in der NUKI App (iOS / Android) die HTTP API Funktion der Bridge.",
-      "IP address": "IP-Adresse"
+    "translations": {
+        "de": {
+            "This instance can determine the Nuki bridges connected to the Nuki server.": "Diese Instanz kann die mit dem Nuki Server verbundenen Nuki Bridges ermitteln.",
+            "An existing internet connection and an activated HTTP API function of the Nuki Bridge is required.": "Es wird eine bestehende Internetverbindung und eine aktivierte HTTP API Funktion der Nuki Bridge benötigt.",
+            "No bridge found! Please enable the HTTP API function of the bridge in the NUKI app (iOS / Android).": "Keine Bridge gefunden! Bitte aktivieren Sie in der NUKI App (iOS / Android) die HTTP API Funktion der Bridge.",
+            "IP address": "IP-Adresse"
+        }
     }
-  }
 }

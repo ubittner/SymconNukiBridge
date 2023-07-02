@@ -1,19 +1,18 @@
 {
-  "id": "{37EAA787-55CE-E2B4-0799-2196F90F5E4C}",
-  "name": "Nuki Splitter Bridge API",
-  "type": 2,
-  "vendor": "NUKI",
-  "aliases": [
-    "Nuki Splitter (Bridge API)"
-  ],
-  "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Bridge",
-  "parentRequirements": [
-  ],
-  "childRequirements": [
-    "{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}"
-  ],
-  "implemented": [
-    "{E187AEEA-487B-ED93-403D-B7D51322A4DF}"
-  ],
-  "prefix": "NUKISB"
+    "id": "{37EAA787-55CE-E2B4-0799-2196F90F5E4C}",
+    "name": "Nuki Splitter Bridge API",
+    "type": 2,
+    "vendor": "NUKI",
+    "aliases": [
+        "Nuki Splitter (Bridge API)"
+    ],
+    "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Bridge",
+    "parentRequirements": [],
+    "childRequirements": [
+        "{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}"
+    ],
+    "implemented": [
+        "{E187AEEA-487B-ED93-403D-B7D51322A4DF}"
+    ],
+    "prefix": "NUKISB"
 }

@@ -12,7 +12,7 @@ class NukiOpenerBridgeAPI extends IPSModule
     private const NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
     private const NUKI_BRIDGE_DATA_GUID = '{E187AEEA-487B-ED93-403D-B7D51322A4DF}';
 
-    public function Create()
+    public function Create(): void
     {
         //Never delete this line!
         parent::Create();
@@ -54,7 +54,7 @@ class NukiOpenerBridgeAPI extends IPSModule
         IPS_SetVariableProfileAssociation($profile, 99999, $this->Translate('Unknown'), 'Information', -1);
         $id = @$this->GetIDForIdent('DeviceState');
         $this->RegisterVariableInteger('DeviceState', $this->Translate('Device state'), $profile, 200);
-        if ($id == false) {
+        if (!$id) {
             $this->SetValue('DeviceState', 99999);
         }
 
@@ -72,15 +72,15 @@ class NukiOpenerBridgeAPI extends IPSModule
         $id = @$this->GetIDForIdent('RingToOpen');
         $this->RegisterVariableBoolean('RingToOpen', 'Ring to Open', '~Switch', 300);
         $this->EnableAction('RingToOpen');
-        if ($id == false) {
+        if (!$id) {
             IPS_SetIcon($this->GetIDForIdent('RingToOpen'), 'Alert');
         }
 
-        //Continous mode
+        //Continuous mode
         $id = @$this->GetIDForIdent('ContinuousMode');
         $this->RegisterVariableBoolean('ContinuousMode', $this->Translate('Continuous mode'), '~Switch', 320);
         $this->EnableAction('ContinuousMode');
-        if ($id == false) {
+        if (!$id) {
             IPS_SetIcon($this->GetIDForIdent('ContinuousMode'), 'Door');
         }
 
@@ -109,7 +109,7 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->ConnectParent(self::NUKI_BRIDGE_GUID);
     }
 
-    public function Destroy()
+    public function Destroy(): void
     {
         //Never delete this line!
         parent::Destroy();
@@ -123,7 +123,10 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
-    public function ApplyChanges()
+    /**
+     * @throws Exception
+     */
+    public function ApplyChanges(): void
     {
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
@@ -142,7 +145,7 @@ class NukiOpenerBridgeAPI extends IPSModule
         if ($this->ReadPropertyBoolean('UseActivityLog')) {
             $id = @$this->GetIDForIdent('ActivityLog');
             $this->MaintainVariable('ActivityLog', $this->Translate('Activity log'), 3, 'HTMLBox', 500, true);
-            if ($id == false) {
+            if (!$id) {
                 IPS_SetIcon($this->GetIDForIdent('ActivityLog'), 'Database');
             }
         } else {
@@ -157,7 +160,10 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->UpdateOpenerState();
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    /**
+     * @throws Exception
+     */
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
         if (!empty($Data)) {
@@ -165,25 +171,28 @@ class NukiOpenerBridgeAPI extends IPSModule
                 $this->SendDebug(__FUNCTION__, 'Data[' . $key . '] = ' . json_encode($value), 0);
             }
         }
-        switch ($Message) {
-            case IPS_KERNELSTARTED:
-                $this->KernelReady();
-                break;
-
+        if ($Message == IPS_KERNELSTARTED) {
+            $this->KernelReady();
         }
     }
 
-    public function GetConfigurationForm()
+    /**
+     * @throws Exception
+     */
+    public function GetConfigurationForm(): string
     {
         $data = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         //Version info
         $library = IPS_GetLibrary(self::LIBRARY_GUID);
-        $data['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ' vom ' . date('d.m.Y', $library['Date']);
+        $data['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ', ' . date('d.m.Y', $library['Date']);
         $data['actions'][0]['caption'] = $this->Translate('Device type: ') . $this->GetDeviceTypeDescription();
         return json_encode($data);
     }
 
-    public function ReceiveData($JSONString)
+    /**
+     * @throws Exception
+     */
+    public function ReceiveData($JSONString): void
     {
         $this->SendDebug(__FUNCTION__, 'Incoming data: ' . $JSONString, 0);
         if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
@@ -205,7 +214,10 @@ class NukiOpenerBridgeAPI extends IPSModule
 
     #################### Request Action
 
-    public function RequestAction($Ident, $Value)
+    /**
+     * @throws Exception
+     */
+    public function RequestAction($Ident, $Value): void
     {
         switch ($Ident) {
             case 'Door':
@@ -224,6 +236,9 @@ class NukiOpenerBridgeAPI extends IPSModule
 
     #################### Public methods
 
+    /**
+     * @throws Exception
+     */
     public function DetermineDeviceType(bool $Force): int
     {
         $nukiID = $this->ReadPropertyString('OpenerUID');
@@ -302,6 +317,9 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $deviceType;
     }
 
+    /**
+     * @throws Exception
+     */
     public function UpdateOpenerState(): void
     {
         $this->SetTimerInterval('UpdateDeviceState', 0);
@@ -309,11 +327,17 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->SetUpdateTimer();
     }
 
+    /**
+     * @throws Exception
+     */
     public function OpenDoor(): bool
     {
         return $this->SetOpenerAction(3);
     }
 
+    /**
+     * @throws Exception
+     */
     public function ToggleRingToOpen(bool $State): bool
     {
         $actualValue = $this->GetValue('RingToOpen');
@@ -330,6 +354,9 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public function ToggleContinuousMode(bool $State): bool
     {
         $actualValue = $this->GetValue('ContinuousMode');
@@ -348,11 +375,17 @@ class NukiOpenerBridgeAPI extends IPSModule
 
     #################### Private methods
 
-    private function KernelReady()
+    /**
+     * @throws Exception
+     */
+    private function KernelReady(): void
     {
         $this->ApplyChanges();
     }
 
+    /**
+     * @throws Exception
+     */
     private function ValidateConfiguration(): bool
     {
         $status = 102;
@@ -367,19 +400,20 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $result;
     }
 
+    /**
+     * @throws Exception
+     */
     private function GetDeviceTypeDescription(): string
     {
-        switch ($this->ReadAttributeInteger('DeviceType')) {
-            case 2:
-                $description = 'Nuki Opener';
-                break;
-
-            default:
-                $description = $this->Translate('Unknown');
-        }
-        return $description;
+        return match ($this->ReadAttributeInteger('DeviceType')) {
+            2       => 'Nuki Opener',
+            default => $this->Translate('Unknown'),
+        };
     }
 
+    /**
+     * @throws Exception
+     */
     private function SetOpenerAction(int $Action): bool
     {
         $nukiID = $this->ReadPropertyString('OpenerUID');
@@ -472,7 +506,6 @@ class NukiOpenerBridgeAPI extends IPSModule
                     case 5:
                         $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('Continuous mode was deactivated.'));
                         break;
-
                 }
             }
         }
@@ -488,7 +521,6 @@ class NukiOpenerBridgeAPI extends IPSModule
                 case 5: # deactivate continuous mode
                     $this->SetValue('ContinuousMode', $actualContinuousModeState);
                     break;
-
             }
             $this->UpdateLog(date('d.m.Y H:i:s'), $this->Translate('The last switching command was not confirmed successfully.'));
         }
@@ -496,6 +528,9 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $success;
     }
 
+    /**
+     * @throws Exception
+     */
     private function GetOpenerState(): void
     {
         $nukiID = $this->ReadPropertyString('OpenerUID');
@@ -556,6 +591,9 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function UpdateDeviceState(string $Data): void
     {
         $this->SendDebug(__FUNCTION__, $Data, 0);
@@ -652,6 +690,9 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
+    /**
+     * @throws Exception
+     */
     private function UpdateLog(string $TimeStamp, string $Action): void
     {
         if (!$this->ReadPropertyBoolean('UseActivityLog')) {
@@ -693,10 +734,13 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->SetValue('ActivityLog', $newString);
     }
 
+    /**
+     * @throws Exception
+     */
     private function SetUpdateTimer(): void
     {
         $interval = 0;
-        //Only if automnatic update is deactivated
+        //Only if automatic update is deactivated
         if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
             $interval = $this->ReadPropertyInteger('UpdateInterval') * 1000;
         }

@@ -9,7 +9,7 @@ Bevor das Modul installiert wird, sollte unbedingt ein Backup von IP-Symcon durc
 Der Entwickler haftet nicht für eventuell auftretende Datenverluste oder sonstige Schäden.  
 Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklich zu.
 
-### Inhaltverzeichnis
+### Inhaltsverzeichnis
 
 1. [Funktionsumfang](#1-funktionsumfang)
 2. [Voraussetzungen](#2-voraussetzungen)
@@ -46,16 +46,16 @@ Der Nutzer stimmt den o.a. Bedingungen, sowie den Lizenzbedingungen ausdrücklic
 
 __Konfigurationsseite__:
 
-Name    | Beschreibung
---------| ----------------------------------------------------------
-Bridges | Liste die mit dem Nuki Server verbundenen Nuki Bridges auf
+| Name    | Beschreibung                                               |
+|---------|------------------------------------------------------------|
+| Bridges | Liste die mit dem Nuki Server verbundenen Nuki Bridges auf |
 
 __Schaltflächen__:
 
-Name            | Beschreibung
---------------- | -----------------------------------------------------------------
-Alle erstellen  | Erstellt für alle aufgelisteten Nuki Bridges jeweils eine Instanz
-Erstellen       | Erstellt für die ausgewählte Nuki Bridge eine Instanz        
+| Name           | Beschreibung                                                      |
+|----------------|-------------------------------------------------------------------|
+| Alle erstellen | Erstellt für alle aufgelisteten Nuki Bridges jeweils eine Instanz |
+| Erstellen      | Erstellt für die ausgewählte Nuki Bridge eine Instanz             |
 
 __Vorgehensweise__:
 

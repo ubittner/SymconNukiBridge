@@ -1,14 +1,14 @@
 {
-  "id": "{9759DA15-D23F-2008-8816-EE1A1FD1AD8F}",
-  "name": "Nuki Discovery Bridge API",
-  "type": 5,
-  "vendor": "NUKI",
-  "aliases": [
-    "Nuki Discovery (Bridge API)"
-  ],
-  "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Discovery",
-  "parentRequirements": [],
-  "childRequirements": [],
-  "implemented": [],
-  "prefix": "NUKIDB"
+    "id": "{9759DA15-D23F-2008-8816-EE1A1FD1AD8F}",
+    "name": "Nuki Discovery Bridge API",
+    "type": 5,
+    "vendor": "NUKI",
+    "aliases": [
+        "Nuki Discovery (Bridge API)"
+    ],
+    "url": "https://github.com/ubittner/SymconNukiBridge/tree/main/Discovery",
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "NUKIDB"
 }

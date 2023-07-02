@@ -1,7 +1,6 @@
 <?php
 
 /** @noinspection HttpUrlsUsage */
-/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
@@ -20,6 +19,7 @@ trait NukiBridgeAPI
      * Otherwise, the bridge returns a negative success and no token.
      *
      * @return string
+     * @throws Exception
      */
     public function EnableAPI(): string
     {
@@ -64,6 +64,7 @@ trait NukiBridgeAPI
      * @param bool $Enable
      *
      * @return string
+     * @throws Exception
      */
     public function ToggleConfigAuth(bool $Enable): string
     {
@@ -75,6 +76,7 @@ trait NukiBridgeAPI
      * Returns a list of all paired devices.
      *
      * @return string
+     * @throws Exception
      */
     public function GetPairedDevices(): string
     {
@@ -88,6 +90,7 @@ trait NukiBridgeAPI
      * @param int $NukiID
      * @param int $DeviceType
      * @return string
+     * @throws Exception
      */
     public function GetLockState(int $NukiID, int $DeviceType = 0): string
     {
@@ -183,6 +186,7 @@ trait NukiBridgeAPI
      * @param int $DeviceType
      * @param int $Action
      * @return string
+     * @throws Exception
      */
     public function SetLockAction(int $NukiID, int $DeviceType, int $Action): string
     {
@@ -227,7 +231,7 @@ trait NukiBridgeAPI
          * Errors
          * HTTP 400 Returned if the given action is invalid
          * HTTP 401 Returned if the given token is invalid or a hashed token parameter is missing.
-         * HTTP 404 Returned if the given SNuki device is unknown
+         * HTTP 404 Returned if the given Nuki device is unknown
          * HTTP 503 Returned if the given Nuki device is offline
          */
     }
@@ -238,6 +242,7 @@ trait NukiBridgeAPI
      * @param int $NukiID
      * @param int $DeviceType
      * @return string
+     * @throws Exception
      */
     public function UnpairDevice(int $NukiID, int $DeviceType = 0): string
     {
@@ -251,6 +256,7 @@ trait NukiBridgeAPI
      * Returns all smart locks and openers in range and some device information of the bridge itself.
      *
      * @return string
+     * @throws Exception
      */
     public function GetBridgeInfo(): string
     {
@@ -262,6 +268,7 @@ trait NukiBridgeAPI
      * Registers a new callback url.
      *
      * @return string
+     * @throws Exception
      */
     public function AddCallback(): string
     {
@@ -282,6 +289,7 @@ trait NukiBridgeAPI
      * Returns all registered url callbacks.
      *
      * @return string
+     * @throws Exception
      */
     public function ListCallback(): string
     {
@@ -295,6 +303,7 @@ trait NukiBridgeAPI
      * @param int $CallbackID
      *
      * @return string
+     * @throws Exception
      */
     public function DeleteCallback(int $CallbackID): string
     {
@@ -306,6 +315,7 @@ trait NukiBridgeAPI
      * Retrieves the log of the bridge.
      *
      * @return string
+     * @throws Exception
      */
     public function GetBridgeLog(): string
     {
@@ -315,6 +325,8 @@ trait NukiBridgeAPI
 
     /**
      * Clears the log of the bridge.
+     *
+     * @throws Exception
      */
     public function ClearBridgeLog(): string
     {
@@ -324,6 +336,8 @@ trait NukiBridgeAPI
 
     /**
      * Immediately checks for a new firmware update and installs it.
+     *
+     * @throws Exception
      */
     public function UpdateBridgeFirmware(): string
     {
@@ -333,6 +347,8 @@ trait NukiBridgeAPI
 
     /**
      * Reboots the bridge.
+     *
+     * @throws Exception
      */
     public function RebootBridge(): string
     {
@@ -342,6 +358,8 @@ trait NukiBridgeAPI
 
     /**
      * Performs a factory reset.
+     *
+     * @throws Exception
      */
     public function FactoryResetBridge(): string
     {
@@ -355,6 +373,7 @@ trait NukiBridgeAPI
      * @param string $Endpoint
      *
      * @return string
+     * @throws Exception
      */
     public function SendDataToBridge(string $Endpoint): string
     {
@@ -381,10 +400,16 @@ trait NukiBridgeAPI
                 if ($this->ReadPropertyBoolean('UseEncryption')) {
                     //New encrypted token
                     $this->SendDebug(__FUNCTION__, 'Encrypted token used!', 0);
-                    $apiToken = utf8_encode($this->ReadAttributeString('BridgeAPIToken'));
+                    //utf8_encoded is deprecated as of 8.2
+                    //$apiToken = utf8_encode($this->ReadAttributeString('BridgeAPIToken'));
+                    $string = $this->ReadAttributeString('BridgeAPIToken');
+                    $apiToken = mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
                     $key = hash('sha256', $apiToken, true);
                     $nonce = random_bytes(SODIUM_CRYPTO_SECRETBOX_NONCEBYTES);
-                    $timestamp = utf8_encode(gmdate("Y-m-d\TH:i:s\Z") . ',' . random_int(0, 65535));
+                    //utf8_encoded is deprecated as of 8.2
+                    //$timestamp = utf8_encode(gmdate("Y-m-d\TH:i:s\Z") . ',' . random_int(0, 65535));
+                    $string = gmdate("Y-m-d\TH:i:s\Z") . ',' . random_int(0, 65535);
+                    $timestamp = mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
                     $cToken = bin2hex(sodium_crypto_secretbox($timestamp, $nonce, $key));
                     $url = 'http://' . $bridgeIP . ':' . $bridgePort . $Endpoint . 'ctoken=' . $cToken . '&nonce=' . bin2hex($nonce);
                 } else {
@@ -412,15 +437,13 @@ trait NukiBridgeAPI
         $httpCode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
         if (!curl_errno($ch)) {
             $this->SendDebug(__FUNCTION__, 'Response http code: ' . $httpCode, 0);
-            switch ($httpCode) {
-                case 200:  # OK
-                    $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
-                    $header = substr($response, 0, $header_size);
-                    $body = json_decode(substr($response, $header_size), true);
-                    $this->SendDebug(__FUNCTION__, 'Response header: ' . $header, 0);
-                    $this->SendDebug(__FUNCTION__, 'Response body: ' . json_encode($body), 0);
-                    break;
-
+            # OK
+            if ($httpCode == 200) {
+                $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+                $header = substr($response, 0, $header_size);
+                $body = json_decode(substr($response, $header_size), true);
+                $this->SendDebug(__FUNCTION__, 'Response header: ' . $header, 0);
+                $this->SendDebug(__FUNCTION__, 'Response body: ' . json_encode($body), 0);
             }
         } else {
             $error_msg = curl_error($ch);
