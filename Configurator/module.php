@@ -175,7 +175,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
 
     private function GetCategoryPath(int $CategoryID): array
     {
-        if ($CategoryID === 0) {
+        if ($CategoryID === 0 || @!IPS_ObjectExists($CategoryID)) {
             return [];
         }
         $path[] = IPS_GetName($CategoryID);
