@@ -1,5 +1,6 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
 /** @noinspection HttpUrlsUsage */
 /** @noinspection PhpUnused */
 
@@ -7,9 +8,6 @@ declare(strict_types=1);
 
 trait Helper_callback
 {
-    /**
-     * @throws Exception
-     */
     public function ManageCallback(): void
     {
         //Get all callbacks from bridge

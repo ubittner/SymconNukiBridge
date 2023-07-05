@@ -1,5 +1,6 @@
 <?php
 
+/** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -14,13 +15,13 @@ class NukiDiscoveryBridgeAPI extends IPSModule
     /**
      * @return void
      */
-    public function Create(): void
+    public function Create()
     {
         //Never delete this line!
         parent::Create();
     }
 
-    public function ApplyChanges(): void
+    public function ApplyChanges()
     {
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
@@ -29,7 +30,7 @@ class NukiDiscoveryBridgeAPI extends IPSModule
         parent::ApplyChanges();
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
         if (!empty($Data)) {
@@ -42,7 +43,7 @@ class NukiDiscoveryBridgeAPI extends IPSModule
         }
     }
 
-    public function GetConfigurationForm(): string
+    public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $library = IPS_GetLibrary(self::LIBRARY_GUID);

@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -18,7 +20,7 @@ class NukiSplitterBridgeAPI extends IPSModule
     private const CORE_WEBHOOK_GUID = '{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}';
     private const NUKI_DEVICE_DATA_GUID = '{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}';
 
-    public function Create(): void
+    public function Create()
     {
         //Never delete this line!
         parent::Create();
@@ -39,7 +41,7 @@ class NukiSplitterBridgeAPI extends IPSModule
         $this->RegisterAttributeString('BridgeAPIToken', '');
     }
 
-    public function Destroy(): void
+    public function Destroy()
     {
         //Unregister WebHook
         if (!IPS_InstanceExists($this->InstanceID)) {
@@ -50,10 +52,7 @@ class NukiSplitterBridgeAPI extends IPSModule
         parent::Destroy();
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ApplyChanges(): void
+    public function ApplyChanges()
     {
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
@@ -72,10 +71,7 @@ class NukiSplitterBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
         if (!empty($Data)) {
@@ -88,10 +84,7 @@ class NukiSplitterBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function GetConfigurationForm(): string
+    public function GetConfigurationForm()
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         //Version info
@@ -108,10 +101,7 @@ class NukiSplitterBridgeAPI extends IPSModule
         return json_encode($formData);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ForwardData($JSONString): string
+    public function ForwardData($JSONString)
     {
         $this->SendDebug(__FUNCTION__, 'JSON String: ' . $JSONString, 0);
         $data = json_decode($JSONString);
@@ -138,9 +128,6 @@ class NukiSplitterBridgeAPI extends IPSModule
         return $result;
     }
 
-    /**
-     * @throws Exception
-     */
     public function UpdateToken(string $NewToken): void
     {
         if (!empty($NewToken)) {
@@ -152,17 +139,11 @@ class NukiSplitterBridgeAPI extends IPSModule
 
     #################### Private
 
-    /**
-     * @throws Exception
-     */
     private function KernelReady(): void
     {
         $this->ApplyChanges();
     }
 
-    /**
-     * @throws Exception
-     */
     private function ValidateConfiguration(): bool
     {
         $status = 102;

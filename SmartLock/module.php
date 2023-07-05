@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -13,7 +15,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
     private const NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
     private const NUKI_BRIDGE_DATA_GUID = '{E187AEEA-487B-ED93-403D-B7D51322A4DF}';
 
-    public function Create(): void
+    public function Create()
     {
         //Never delete this line!
         parent::Create();
@@ -112,7 +114,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
         $this->ConnectParent(self::NUKI_BRIDGE_GUID);
     }
 
-    public function Destroy(): void
+    public function Destroy()
     {
         //Never delete this line!
         parent::Destroy();
@@ -123,10 +125,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ApplyChanges(): void
+    public function ApplyChanges()
     {
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
@@ -201,10 +200,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
         $this->UpdateSmartLockState();
     }
 
-    /**
-     * @throws Exception
-     */
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
         if (!empty($Data)) {
@@ -217,10 +213,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function GetConfigurationForm(): string
+    public function GetConfigurationForm()
     {
         $data = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         //Version info
@@ -230,10 +223,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
         return json_encode($data);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ReceiveData($JSONString): void
+    public function ReceiveData($JSONString)
     {
         $this->SendDebug(__FUNCTION__, 'Incoming data: ' . $JSONString, 0);
         if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
@@ -255,10 +245,7 @@ class NukiSmartLockBridgeAPI extends IPSModule
 
     #################### Request Action
 
-    /**
-     * @throws Exception
-     */
-    public function RequestAction($Ident, $Value): void
+    public function RequestAction($Ident, $Value)
     {
         if ($Ident == 'SmartLock') {
             $this->SetSmartLockAction($Value);
@@ -267,9 +254,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
 
     #################### Public methods
 
-    /**
-     * @throws Exception
-     */
     public function DetermineDeviceType(bool $Force): int
     {
         $nukiID = $this->ReadPropertyString('SmartLockUID');
@@ -348,9 +332,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         return $deviceType;
     }
 
-    /**
-     * @throws Exception
-     */
     public function SetSmartLockAction(int $Action): bool
     {
         $nukiID = $this->ReadPropertyString('SmartLockUID');
@@ -486,9 +467,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         return $success;
     }
 
-    /**
-     * @throws Exception
-     */
     public function UpdateSmartLockState(): void
     {
         $this->SetTimerInterval('UpdateDeviceState', 0);
@@ -498,17 +476,11 @@ class NukiSmartLockBridgeAPI extends IPSModule
 
     #################### Private methods
 
-    /**
-     * @throws Exception
-     */
     private function KernelReady(): void
     {
         $this->ApplyChanges();
     }
 
-    /**
-     * @throws Exception
-     */
     private function ValidateConfiguration(): bool
     {
         $status = 102;
@@ -531,9 +503,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function GetDeviceTypeDescription(): string
     {
         return match ($this->ReadAttributeInteger('DeviceType')) {
@@ -543,9 +512,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         };
     }
 
-    /**
-     * @throws Exception
-     */
     private function GetSmartLockState(): void
     {
         $nukiID = $this->ReadPropertyString('SmartLockUID');
@@ -606,9 +572,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function UpdateDeviceState(string $Data): void
     {
         $this->SendDebug(__FUNCTION__, $Data, 0);
@@ -746,9 +709,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function UpdateLog(string $TimeStamp, string $Action): void
     {
         if (!$this->ReadPropertyBoolean('UseActivityLog')) {
@@ -790,9 +750,6 @@ class NukiSmartLockBridgeAPI extends IPSModule
         $this->SetValue('ActivityLog', $newString);
     }
 
-    /**
-     * @throws Exception
-     */
     private function SetUpdateTimer(): void
     {
         $interval = 0;
