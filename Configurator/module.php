@@ -1,12 +1,12 @@
 <?php
 
-/** @noinspection PhpMissingReturnTypeInspection */
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
-class NukiConfiguratorBridgeAPI extends IPSModule
+class NukiConfiguratorBridgeAPI extends IPSModuleStrict
 {
     //Constants
     private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
@@ -15,7 +15,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
     private const NUKI_SMARTLOCK_GUID = '{A956C3A4-C5E5-E892-58E7-71813024E5C7}';
     private const NUKI_OPENER_GUID = '{2F33704C-4B0B-38B3-7EB0-65DF0630C41D}';
 
-    public function Create()
+    public function Create(): void
     {
         //Never delete this line!
         parent::Create();
@@ -27,7 +27,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
         $this->ConnectParent(self::NUKI_BRIDGE_GUID);
     }
 
-    public function ApplyChanges()
+    public function ApplyChanges(): void
     {
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
@@ -36,7 +36,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
         parent::ApplyChanges();
     }
 
-    public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
         if (!empty($Data)) {
@@ -52,7 +52,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
     /**
      * @throws Exception
      */
-    public function GetConfigurationForm()
+    public function GetConfigurationForm(): string
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
         $library = IPS_GetLibrary(self::LIBRARY_GUID);
