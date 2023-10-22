@@ -1,5 +1,6 @@
 <?php
 
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection HttpUrlsUsage */
 
 declare(strict_types=1);

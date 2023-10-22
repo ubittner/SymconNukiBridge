@@ -1,19 +1,17 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection HttpUrlsUsage */
-/** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
 trait Helper_callback
 {
-    /**
-     * @throws Exception
-     */
     public function ManageCallback(): void
     {
         //Get all callbacks from bridge
-        $host = (string) $this->ReadPropertyString('SocketIP');
+        $host = $this->ReadPropertyString('SocketIP');
         $port = (string) $this->ReadPropertyInteger('SocketPort');
         $useCallback = $this->ReadPropertyBoolean('UseCallback');
         $url = 'http://' . $host . ':' . $port . '/hook/nuki/bridge/' . $this->InstanceID . '/';

@@ -1,6 +1,7 @@
 <?php
 
 /** @noinspection PhpUnusedPrivateMethodInspection */
+/** @noinspection PhpUndefinedFieldInspection */
 
 declare(strict_types=1);
 
@@ -29,7 +30,7 @@ trait Helper_webHook
      *
      * @param $WebHook
      */
-    private function RegisterHook($WebHook): void
+    protected function RegisterHook($WebHook): void
     {
         $ids = IPS_GetInstanceListByModuleID(self::CORE_WEBHOOK_GUID);
         if (count($ids) > 0) {

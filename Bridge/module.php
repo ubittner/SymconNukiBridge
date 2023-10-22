@@ -1,5 +1,7 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
@@ -7,7 +9,7 @@ declare(strict_types=1);
 
 include_once __DIR__ . '/helper/autoload.php';
 
-class NukiSplitterBridgeAPI extends IPSModule
+class NukiSplitterBridgeAPI extends IPSModuleStrict
 {
     //Helper
     use NukiBridgeAPI;
@@ -50,9 +52,6 @@ class NukiSplitterBridgeAPI extends IPSModule
         parent::Destroy();
     }
 
-    /**
-     * @throws Exception
-     */
     public function ApplyChanges(): void
     {
         //Wait until IP-Symcon is started
@@ -72,9 +71,6 @@ class NukiSplitterBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
@@ -88,9 +84,6 @@ class NukiSplitterBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function GetConfigurationForm(): string
     {
         $formData = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
@@ -108,9 +101,6 @@ class NukiSplitterBridgeAPI extends IPSModule
         return json_encode($formData);
     }
 
-    /**
-     * @throws Exception
-     */
     public function ForwardData($JSONString): string
     {
         $this->SendDebug(__FUNCTION__, 'JSON String: ' . $JSONString, 0);
@@ -138,9 +128,6 @@ class NukiSplitterBridgeAPI extends IPSModule
         return $result;
     }
 
-    /**
-     * @throws Exception
-     */
     public function UpdateToken(string $NewToken): void
     {
         if (!empty($NewToken)) {
@@ -152,17 +139,11 @@ class NukiSplitterBridgeAPI extends IPSModule
 
     #################### Private
 
-    /**
-     * @throws Exception
-     */
     private function KernelReady(): void
     {
         $this->ApplyChanges();
     }
 
-    /**
-     * @throws Exception
-     */
     private function ValidateConfiguration(): bool
     {
         $status = 102;

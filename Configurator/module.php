@@ -1,11 +1,12 @@
 <?php
 
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
-class NukiConfiguratorBridgeAPI extends IPSModule
+class NukiConfiguratorBridgeAPI extends IPSModuleStrict
 {
     //Constants
     private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';

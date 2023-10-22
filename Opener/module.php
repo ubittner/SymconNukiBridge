@@ -1,11 +1,13 @@
 <?php
 
+/** @noinspection PhpUnhandledExceptionInspection */
+/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
-class NukiOpenerBridgeAPI extends IPSModule
+class NukiOpenerBridgeAPI extends IPSModuleStrict
 {
     private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
     private const MODULE_PREFIX = 'NUKIOB';
@@ -123,9 +125,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function ApplyChanges(): void
     {
         //Wait until IP-Symcon is started
@@ -160,9 +159,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->UpdateOpenerState();
     }
 
-    /**
-     * @throws Exception
-     */
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
     {
         $this->SendDebug(__FUNCTION__, $TimeStamp . ', SenderID: ' . $SenderID . ', Message: ' . $Message . ', Data: ' . print_r($Data, true), 0);
@@ -176,9 +172,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function GetConfigurationForm(): string
     {
         $data = json_decode(file_get_contents(__DIR__ . '/form.json'), true);
@@ -189,15 +182,12 @@ class NukiOpenerBridgeAPI extends IPSModule
         return json_encode($data);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ReceiveData($JSONString): void
+    public function ReceiveData($JSONString): string
     {
         $this->SendDebug(__FUNCTION__, 'Incoming data: ' . $JSONString, 0);
         if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
             $this->SendDebug(__FUNCTION__, 'Abort, automatic update is disabled!', 0);
-            return;
+            return '';
         }
         $data = json_decode($JSONString, true);
         $buffer = $data['Buffer'];
@@ -206,17 +196,15 @@ class NukiOpenerBridgeAPI extends IPSModule
             $nukiID = $buffer['nukiId'];
             if ($this->ReadPropertyString('OpenerUID') != $nukiID) {
                 $this->SendDebug(__FUNCTION__, 'Abort, data is not for this device!', 0);
-                return;
+                return '';
             }
         }
         $this->UpdateDeviceState(json_encode($buffer));
+        return '';
     }
 
     #################### Request Action
 
-    /**
-     * @throws Exception
-     */
     public function RequestAction($Ident, $Value): void
     {
         switch ($Ident) {
@@ -236,9 +224,6 @@ class NukiOpenerBridgeAPI extends IPSModule
 
     #################### Public methods
 
-    /**
-     * @throws Exception
-     */
     public function DetermineDeviceType(bool $Force): int
     {
         $nukiID = $this->ReadPropertyString('OpenerUID');
@@ -317,9 +302,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $deviceType;
     }
 
-    /**
-     * @throws Exception
-     */
     public function UpdateOpenerState(): void
     {
         $this->SetTimerInterval('UpdateDeviceState', 0);
@@ -327,17 +309,11 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->SetUpdateTimer();
     }
 
-    /**
-     * @throws Exception
-     */
     public function OpenDoor(): bool
     {
         return $this->SetOpenerAction(3);
     }
 
-    /**
-     * @throws Exception
-     */
     public function ToggleRingToOpen(bool $State): bool
     {
         $actualValue = $this->GetValue('RingToOpen');
@@ -354,9 +330,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $result;
     }
 
-    /**
-     * @throws Exception
-     */
     public function ToggleContinuousMode(bool $State): bool
     {
         $actualValue = $this->GetValue('ContinuousMode');
@@ -375,17 +348,11 @@ class NukiOpenerBridgeAPI extends IPSModule
 
     #################### Private methods
 
-    /**
-     * @throws Exception
-     */
     private function KernelReady(): void
     {
         $this->ApplyChanges();
     }
 
-    /**
-     * @throws Exception
-     */
     private function ValidateConfiguration(): bool
     {
         $status = 102;
@@ -400,9 +367,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $result;
     }
 
-    /**
-     * @throws Exception
-     */
     private function GetDeviceTypeDescription(): string
     {
         return match ($this->ReadAttributeInteger('DeviceType')) {
@@ -411,9 +375,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         };
     }
 
-    /**
-     * @throws Exception
-     */
     private function SetOpenerAction(int $Action): bool
     {
         $nukiID = $this->ReadPropertyString('OpenerUID');
@@ -484,7 +445,7 @@ class NukiOpenerBridgeAPI extends IPSModule
             }
         }
         //Only if we have no update automatic
-        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate') && $this->ReadPropertyInteger('UpdateInterval' == 0)) {
+        if (!$this->ReadPropertyBoolean('UseAutomaticUpdate') && $this->ReadPropertyInteger('UpdateInterval') == 0) {
             if ($success) {
                 switch ($Action) {
                     case 1:
@@ -528,9 +489,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         return $success;
     }
 
-    /**
-     * @throws Exception
-     */
     private function GetOpenerState(): void
     {
         $nukiID = $this->ReadPropertyString('OpenerUID');
@@ -591,9 +549,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function UpdateDeviceState(string $Data): void
     {
         $this->SendDebug(__FUNCTION__, $Data, 0);
@@ -690,9 +645,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         }
     }
 
-    /**
-     * @throws Exception
-     */
     private function UpdateLog(string $TimeStamp, string $Action): void
     {
         if (!$this->ReadPropertyBoolean('UseActivityLog')) {
@@ -734,9 +686,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         $this->SetValue('ActivityLog', $newString);
     }
 
-    /**
-     * @throws Exception
-     */
     private function SetUpdateTimer(): void
     {
         $interval = 0;
