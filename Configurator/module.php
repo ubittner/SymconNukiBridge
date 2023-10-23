@@ -20,9 +20,6 @@ class NukiConfiguratorBridgeAPI extends IPSModuleStrict
         //Never delete this line!
         parent::Create();
 
-        //Properties
-        $this->RegisterPropertyInteger('CategoryID', 0);
-
         //Connect to parent (Nuki Bridge Splitter)
         $this->ConnectParent(self::NUKI_BRIDGE_GUID);
     }
@@ -73,7 +70,6 @@ class NukiConfiguratorBridgeAPI extends IPSModuleStrict
             }
         }
         $values = [];
-        $location = $this->GetCategoryPath($this->ReadPropertyInteger(('CategoryID')));
         if (!is_null($pairedDevices)) {
             foreach ($pairedDevices as $pairedDevice) {
                 if (array_key_exists('deviceType', $pairedDevice)) {
@@ -104,8 +100,7 @@ class NukiConfiguratorBridgeAPI extends IPSModuleStrict
                                     'configuration' => [
                                         'SmartLockUID'  => (string) $nukiID,
                                         'SmartLockName' => (string) $deviceName
-                                    ],
-                                    'location' => $location
+                                    ]
                                 ]
                             ];
                             break;
@@ -124,8 +119,7 @@ class NukiConfiguratorBridgeAPI extends IPSModuleStrict
                                     'configuration' => [
                                         'OpenerUID'  => (string) $nukiID,
                                         'OpenerName' => (string) $deviceName
-                                    ],
-                                    'location' => $location
+                                    ]
                                 ]
                             ];
                             break;
@@ -172,20 +166,6 @@ class NukiConfiguratorBridgeAPI extends IPSModuleStrict
     private function KernelReady(): void
     {
         $this->ApplyChanges();
-    }
-
-    private function GetCategoryPath(int $CategoryID): array
-    {
-        if ($CategoryID === 0 || @!IPS_ObjectExists($CategoryID)) {
-            return [];
-        }
-        $path[] = IPS_GetName($CategoryID);
-        $parentID = IPS_GetObject($CategoryID)['ParentID'];
-        while ($parentID > 0) {
-            $path[] = IPS_GetName($parentID);
-            $parentID = IPS_GetObject($parentID)['ParentID'];
-        }
-        return array_reverse($path);
     }
 
     private function GetPairedDevices(): string

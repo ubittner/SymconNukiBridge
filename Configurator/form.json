@@ -15,19 +15,6 @@
         {
             "type": "Label",
             "caption": "This instance can determine existing Nuki Devices of the assigned Nuki Bridge."
-        },
-        {
-            "type": "Label",
-            "caption": " "
-        },
-        {
-            "type": "Label",
-            "caption": "Please select the category for the Nuki Devices"
-        },
-        {
-            "type": "SelectCategory",
-            "name": "CategoryID",
-            "caption": "Category"
         }
     ],
     "actions": [

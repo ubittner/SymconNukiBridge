@@ -3,8 +3,6 @@
         "de": {
             "Nuki Configurator (Bridge API)": "Nuki Konfigurator (Bridge API)",
             "This instance can determine existing Nuki Devices of the assigned Nuki Bridge.": "Diese Instanz kann bestehende Nuki Geräte der zugeordneten Nuki Bridge ermitteln.",
-            "Please select the category for the Nuki Devices": "Bitte wählen Sie die Kategorie für die Nuki Geräte aus",
-            "Category": "Kategorie",
             "Devices": "Geräte",
             "Device Type": "Gerätetyp",
             "Product Designation": "Produktbezeichnung",
