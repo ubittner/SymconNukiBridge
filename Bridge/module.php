@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 include_once __DIR__ . '/helper/autoload.php';
 
-class NukiSplitterBridgeAPI extends IPSModuleStrict
+class NukiSplitterBridgeAPI extends IPSModule
 {
     //Helper
     use NukiBridgeAPI;
