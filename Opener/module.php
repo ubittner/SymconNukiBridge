@@ -7,7 +7,7 @@
 
 declare(strict_types=1);
 
-class NukiOpenerBridgeAPI extends IPSModuleStrict
+class NukiOpenerBridgeAPI extends IPSModule
 {
     private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
     private const MODULE_PREFIX = 'NUKIOB';
