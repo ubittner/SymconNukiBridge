@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace tests;
+
 use TestCaseSymconValidation;
 
 include_once __DIR__ . '/stubs/Validator.php';
