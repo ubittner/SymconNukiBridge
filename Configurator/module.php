@@ -180,7 +180,14 @@ class NukiConfiguratorBridgeAPI extends IPSModule
         $buffer['Params'] = '';
         $data['Buffer'] = $buffer;
         $data = json_encode($data);
-        $result = json_decode($this->SendDataToParent($data), true);
+        $result = @$this->SendDataToParent($data);
+        if (!is_string($result)) {
+            return '';
+        }
+        if (!$this->CheckJson($result)) {
+            return '';
+        }
+        $result = json_decode($result, true);
         $devices = '{}';
         if (array_key_exists('body', $result)) {
             $this->SendDebug(__FUNCTION__, 'Actual data: ' . json_encode($result['body']), 0);
@@ -212,5 +219,11 @@ class NukiConfiguratorBridgeAPI extends IPSModule
             }
         }
         return $instanceID;
+    }
+
+    private function CheckJson(string $String): bool
+    {
+        json_decode($String);
+        return json_last_error() === JSON_ERROR_NONE;
     }
 }
