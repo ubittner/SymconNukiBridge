@@ -7,8 +7,8 @@
 [![Check Style](https://github.com/ubittner/SymconNukiBridge/workflows/Check%20Style/badge.svg)](https://github.com/ubittner/SymconNukiBridge/actions)
 [![Run Tests](https://github.com/ubittner/SymconNukiBridge/workflows/Run%20Tests/badge.svg)](https://github.com/ubittner/SymconNukiBridge/actions)  
 [![Module Version](https://img.shields.io/badge/Module_Version-2.0-blue.svg)]()
-[![Module Build](https://img.shields.io/badge/Module_Build-8-blue.svg)]()
-[![Module Date](https://img.shields.io/badge/Module_Date-20250417_(17.04.2025)-blue.svg)]()  
+[![Module Build](https://img.shields.io/badge/Module_Build-9-blue.svg)]()
+[![Module Date](https://img.shields.io/badge/Module_Date-20250425_(25.04.2025)-blue.svg)]()  
 [![Version](https://img.shields.io/badge/NUKI_API_Version-1.13.3-yellow.svg)](https://developer.nuki.io/t/bridge-http-api/26)  
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-green.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
 
