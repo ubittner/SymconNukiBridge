@@ -10,7 +10,7 @@ trait Helper_webHook
     /**
      * This function will be called by the hook control. It will forward the incoming data to all children.
      */
-    protected function ProcessHookData(): void
+    protected function ProcessHookData()
     {
         $this->SendDebug(__FUNCTION__ . ' Incoming Data: ', print_r($_SERVER, true), 0);
         // Get content
@@ -30,7 +30,7 @@ trait Helper_webHook
      *
      * @param $WebHook
      */
-    protected function RegisterHook($WebHook): void
+    protected function RegisterHook($WebHook)
     {
         $ids = IPS_GetInstanceListByModuleID(self::CORE_WEBHOOK_GUID);
         if (count($ids) > 0) {
@@ -59,7 +59,7 @@ trait Helper_webHook
      *
      * @param $WebHook
      */
-    private function UnregisterHook($WebHook): void
+    private function UnregisterHook($WebHook)
     {
         $ids = IPS_GetInstanceListByModuleID(self::CORE_WEBHOOK_GUID);
         if (count($ids) > 0) {
