@@ -1,18 +1,17 @@
 <?php
 
 /** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
-class NukiOpenerBridgeAPI extends IPSModule
+class NukiOpenerBridgeAPI extends IPSModuleStrict
 {
-    private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
-    private const MODULE_PREFIX = 'NUKIOB';
-    private const NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
-    private const NUKI_BRIDGE_DATA_GUID = '{E187AEEA-487B-ED93-403D-B7D51322A4DF}';
+    private const string LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
+    private const string MODULE_PREFIX = 'NUKIOB';
+    private const string NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
+    private const string NUKI_BRIDGE_DATA_GUID = '{E187AEEA-487B-ED93-403D-B7D51322A4DF}';
 
     public function Create(): void
     {
@@ -104,11 +103,6 @@ class NukiOpenerBridgeAPI extends IPSModule
         ##### Timer
 
         $this->RegisterTimer('UpdateDeviceState', 0, self::MODULE_PREFIX . '_UpdateOpenerState(' . $this->InstanceID . ');');
-
-        ##### Splitter
-
-        //Connect to parent (Nuki Splitter Bridge API)
-        $this->ConnectParent(self::NUKI_BRIDGE_GUID);
     }
 
     public function Destroy(): void
@@ -157,6 +151,17 @@ class NukiOpenerBridgeAPI extends IPSModule
 
         $this->DetermineDeviceType(false);
         $this->UpdateOpenerState();
+    }
+
+    public function GetCompatibleParents(): string
+    {
+        //Connect to a new or existing Nuki Bridge Splitter instance
+        return json_encode([
+            'type'      => 'connect',
+            'moduleIDs' => [
+                self::NUKI_BRIDGE_GUID
+            ]
+        ]);
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
@@ -689,7 +694,7 @@ class NukiOpenerBridgeAPI extends IPSModule
     private function SetUpdateTimer(): void
     {
         $interval = 0;
-        //Only if automatic update is deactivated
+        //Only if the automatic update is deactivated
         if (!$this->ReadPropertyBoolean('UseAutomaticUpdate')) {
             $interval = $this->ReadPropertyInteger('UpdateInterval') * 1000;
         }

@@ -1,16 +1,15 @@
 <?php
 
-/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
-class NukiDiscoveryBridgeAPI extends IPSModule
+class NukiDiscoveryBridgeAPI extends IPSModuleStrict
 {
     //Constants
-    private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
-    private const NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
+    private const string LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
+    private const string NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
 
     /**
      * @return void
@@ -81,7 +80,7 @@ class NukiDiscoveryBridgeAPI extends IPSModule
     {
         /*
          * Calling the URL https://api.nuki.io/discover/bridges
-         * returns a JSON array with all bridges which have been connected to the Nuki Servers through the same IP address
+         * returns a JSON array with all bridges that have been connected to the Nuki Servers through the same IP address
          * than the one calling the URL within the last 30 days.
          * The array contains the local IP address, port, the ID of each bridge and the date of the last change of the entry in the JSON array.
          */

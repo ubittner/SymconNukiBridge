@@ -1,28 +1,18 @@
 <?php
 
-/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
-class NukiConfiguratorBridgeAPI extends IPSModule
+class NukiConfiguratorBridgeAPI extends IPSModuleStrict
 {
     //Constants
-    private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
-    private const NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
-    private const NUKI_BRIDGE_DATA_GUID = '{E187AEEA-487B-ED93-403D-B7D51322A4DF}';
-    private const NUKI_SMARTLOCK_GUID = '{A956C3A4-C5E5-E892-58E7-71813024E5C7}';
-    private const NUKI_OPENER_GUID = '{2F33704C-4B0B-38B3-7EB0-65DF0630C41D}';
-
-    public function Create(): void
-    {
-        //Never delete this line!
-        parent::Create();
-
-        //Connect to parent (Nuki Bridge Splitter)
-        $this->ConnectParent(self::NUKI_BRIDGE_GUID);
-    }
+    private const string LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
+    private const string NUKI_BRIDGE_GUID = '{37EAA787-55CE-E2B4-0799-2196F90F5E4C}';
+    private const string NUKI_BRIDGE_DATA_GUID = '{E187AEEA-487B-ED93-403D-B7D51322A4DF}';
+    private const string NUKI_SMARTLOCK_GUID = '{A956C3A4-C5E5-E892-58E7-71813024E5C7}';
+    private const string NUKI_OPENER_GUID = '{2F33704C-4B0B-38B3-7EB0-65DF0630C41D}';
 
     public function ApplyChanges(): void
     {
@@ -31,6 +21,17 @@ class NukiConfiguratorBridgeAPI extends IPSModule
 
         //Never delete this line!
         parent::ApplyChanges();
+    }
+
+    public function GetCompatibleParents(): string
+    {
+        //Connect to a new or existing Nuki Bridge Splitter instance
+        return json_encode([
+            'type'      => 'connect',
+            'moduleIDs' => [
+                self::NUKI_BRIDGE_GUID
+            ]
+        ]);
     }
 
     public function MessageSink($TimeStamp, $SenderID, $Message, $Data): void
@@ -55,7 +56,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
         $library = IPS_GetLibrary(self::LIBRARY_GUID);
         $formData['elements'][2]['caption'] = 'ID: ' . $this->InstanceID . ', Version: ' . $library['Version'] . '-' . $library['Build'] . ', ' . date('d.m.Y', $library['Date']);
         $pairedDevices = json_decode($this->GetPairedDevices(), true);
-        //Get all device instances first, first key is the UID and next key [0] is the instance id.
+        //Get all device instances first, the first key is the UID and the next key [0] is the instance id.
         $connectedInstanceIDs = [];
         foreach (IPS_GetInstanceListByModuleID(self::NUKI_SMARTLOCK_GUID) as $instanceID) {
             if (IPS_GetInstance($instanceID)['ConnectionID'] === IPS_GetInstance($this->InstanceID)['ConnectionID']) {
@@ -137,7 +138,7 @@ class NukiConfiguratorBridgeAPI extends IPSModule
         }
         foreach ($connectedInstanceIDs as $deviceUID => $instanceIDs) {
             foreach ($instanceIDs as $index => $instanceID) {
-                //The first entry for each device UID was already added as valid value
+                //The first entry for each device UID was already added as a valid value
                 $device = false;
                 foreach ($pairedDevices as $pairedDevice) {
                     if ($pairedDevice['nukiId'] == $deviceUID) {
@@ -223,7 +224,6 @@ class NukiConfiguratorBridgeAPI extends IPSModule
 
     private function CheckJson(string $String): bool
     {
-        json_decode($String);
-        return json_last_error() === JSON_ERROR_NONE;
+        return json_validate($String);
     }
 }

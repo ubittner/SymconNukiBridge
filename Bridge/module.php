@@ -1,24 +1,23 @@
 <?php
 
 /** @noinspection PhpUnhandledExceptionInspection */
-/** @noinspection PhpUndefinedFieldInspection */
 /** @noinspection DuplicatedCode */
+/** @noinspection HttpUrlsUsage */
 /** @noinspection PhpUnused */
 
 declare(strict_types=1);
 
 include_once __DIR__ . '/helper/autoload.php';
 
-class NukiSplitterBridgeAPI extends IPSModule
+class NukiSplitterBridgeAPI extends IPSModuleStrict
 {
     //Helper
     use NukiBridgeAPI;
-    use Helper_callback;
-    use Helper_webHook;
+
     //Constants
-    private const LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
-    private const CORE_WEBHOOK_GUID = '{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}';
-    private const NUKI_DEVICE_DATA_GUID = '{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}';
+    private const string LIBRARY_GUID = '{C761F228-6964-E7B7-A8F4-E90DC334649A}';
+    private const string CORE_WEBHOOK_GUID = '{015A6EB8-D6E5-4B93-B496-0D3F77AE9FE1}';
+    private const string NUKI_DEVICE_DATA_GUID = '{02DF61B7-859A-0460-5D52-E2FA4F4FEC5A}';
 
     public function Create(): void
     {
@@ -39,17 +38,6 @@ class NukiSplitterBridgeAPI extends IPSModule
 
         ##### Attribute
         $this->RegisterAttributeString('BridgeAPIToken', '');
-    }
-
-    public function Destroy(): void
-    {
-        //Unregister WebHook
-        if (!IPS_InstanceExists($this->InstanceID)) {
-            $this->UnregisterHook('/hook/nuki/bridge/' . $this->InstanceID);
-        }
-
-        // Never delete this line!
-        parent::Destroy();
     }
 
     public function ApplyChanges(): void
@@ -137,7 +125,80 @@ class NukiSplitterBridgeAPI extends IPSModule
         }
     }
 
-    #################### Private
+    public function ManageCallback(): void
+    {
+        //Get all callbacks from bridge
+        $host = $this->ReadPropertyString('SocketIP');
+        $port = (string) $this->ReadPropertyInteger('SocketPort');
+        $useCallback = $this->ReadPropertyBoolean('UseCallback');
+        $url = 'http://' . $host . ':' . $port . '/hook/nuki/bridge/' . $this->InstanceID . '/';
+        $result = json_decode($this->ListCallback(), true);
+        if (array_key_exists('body', $result)) {
+            $body = $result['body'];
+            if (!empty($body) && is_array($body)) {
+                if (array_key_exists('callbacks', $result['body'])) {
+                    $callbacks = $result['body']['callbacks'];
+                    //Check if callback already exits
+                    $exists = false;
+                    if (!empty($callbacks)) {
+                        foreach ($callbacks as $callback) {
+                            if (array_key_exists('url', $callback)) {
+                                if ($url == $callback['url']) {
+                                    $exists = true;
+                                }
+                            }
+                        }
+                    }
+                    //Add callback
+                    if ($useCallback) {
+                        $this->RegisterHook('nuki/bridge/' . $this->InstanceID);
+                        if (!$exists) {
+                            $this->AddCallback();
+                        }
+                    } // Delete callback
+                    else {
+                        $unregister = $this->UnregisterHook('nuki/bridge/' . $this->InstanceID);
+                        $this->SendDebug(__FUNCTION__, 'Unregister result: ' . $unregister, 0);
+                        if (!empty($callbacks)) {
+                            foreach ($callbacks as $callback) {
+                                if (array_key_exists('url', $callback)) {
+                                    if ($url == $callback['url']) {
+                                        if (array_key_exists('id', $callback)) {
+                                            $this->DeleteCallback($callback['id']);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            $this->SendDebug(__FUNCTION__, "Callback couldn't be managed. Please check manually!", 0);
+        }
+    }
+
+    ########## Protected
+
+    /**
+     * This function will be called by the hook control. It will forward the incoming data to all children.
+     */
+    protected function ProcessHookData(): void
+    {
+        $this->SendDebug(__FUNCTION__ . ' Incoming Data: ', print_r($_SERVER, true), 0);
+        // Get content
+        $data = file_get_contents('php://input');
+        $this->SendDebug(__FUNCTION__ . ' Data: ', $data, 0);
+        // Send data to children
+        $forwardData = [];
+        $forwardData['DataID'] = self::NUKI_DEVICE_DATA_GUID;
+        $forwardData['Buffer'] = json_decode($data);
+        $forwardData = json_encode($forwardData);
+        $this->SendDebug(__FUNCTION__ . ' Forward Data: ', $forwardData, 0);
+        $this->SendDataToChildren($forwardData);
+    }
+
+    ########## Private
 
     private function KernelReady(): void
     {

@@ -4,9 +4,9 @@
     "name": "Nuki Bridge",
     "url": "https://nuki.io/de/",
     "compatibility": {
-        "version": "7.0"
+        "version": "9.0"
     },
     "version": "2.0",
-    "build": 9,
-    "date": 1745598935
+    "build": 10,
+    "date": 1771755020
 }
