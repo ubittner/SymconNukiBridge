@@ -124,6 +124,9 @@ class NukiOpenerBridgeAPI extends IPSModuleStrict
         //Wait until IP-Symcon is started
         $this->RegisterMessage(0, IPS_KERNELSTARTED);
 
+        //Register FM Connect message
+        $this->RegisterMessage($this->InstanceID, FM_CONNECT);
+
         //Never delete this line!
         parent::ApplyChanges();
 
@@ -149,8 +152,10 @@ class NukiOpenerBridgeAPI extends IPSModuleStrict
             return;
         }
 
-        $this->DetermineDeviceType(false);
-        $this->UpdateOpenerState();
+        if ($this->HasActiveParent()) {
+            $this->DetermineDeviceType(false);
+            $this->UpdateOpenerState();
+        }
     }
 
     public function GetCompatibleParents(): string
@@ -172,8 +177,16 @@ class NukiOpenerBridgeAPI extends IPSModuleStrict
                 $this->SendDebug(__FUNCTION__, 'Data[' . $key . '] = ' . json_encode($value), 0);
             }
         }
-        if ($Message == IPS_KERNELSTARTED) {
-            $this->KernelReady();
+        switch ($Message) {
+            case IPS_KERNELSTARTED:
+                $this->KernelReady();
+                break;
+
+            case FM_CONNECT:
+                $this->DetermineDeviceType(false);
+                $this->UpdateOpenerState();
+                break;
+
         }
     }
 
